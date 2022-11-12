@@ -1,0 +1,64 @@
+﻿@*@model List<UnifiedFGNBooks.V3.Infrastructure.Entities.MenuCommands>
+@{
+    var pageName = ViewData["PageName"]?.ToString().ToLower();
+    var menuItems = Model.Where(m => m.MenusId == 0).ToList();
+}
+<ul id="js-nav-menu" class="nav-menu">
+
+    @if (menuItems != null && menuItems.Count > 0)
+    {
+        @foreach (var group in menuItems)
+        {
+            var clist = Model.Where(m => m.MenusId == group.Id).ToList();
+
+            @if (clist != null && clist.Count > 0)
+            {
+                var groups = clist.Select(x => x.Href.ToPage()).Where(x => !x.IsVoid()).ToList();
+
+              
+                <li class="@(groups.Contains(pageName) ? "active open" : "")">
+                    <a href="#" title="@group.Title" data-filter-tags="@group.Tags">
+                        <i class="@group.Icon"></i>
+                        <span class="nav-link-text" data-i18n="@group.I18n">@group.Title.AsRaw()</span>
+
+                    </a>
+                    <ul>
+                        @{
+                            foreach (var item in clist)
+                            {
+
+                                <text>
+                                    <li class="@(pageName == item.Href.ToPage() ? "active" : "")">
+                                </text>
+                                <text>
+                                    <a href="@item.Route" title="@item.Title" data-filter-tags="@item.Tags">
+                                        <span class="nav-link-text" data-i18n="@item.I18n">@item.Title.AsRaw()</span>
+                                    </a>
+                                </text>
+                            @:</li>
+                        }
+                        }
+                    </ul>
+                </li>
+            }
+            else
+            {
+                if (group.Type != "Category")
+                {
+                    <li class="nav-title">@group.Title</li>
+                }
+                else
+                {
+                    <li class="@(pageName == group.Href.ToPage() ? "active" : "")">
+                        <a href="@group.Route" title="@group.Title" data-filter-tags="@group.Tags">
+                            <i class="@group.Icon"></i>
+                            <span class="nav-link-text" data-i18n="@group.I18n">@group.Title.AsRaw()</span>
+                        </a>
+                    </li>
+                }
+            }
+        }
+    }
+
+</ul>
+*@

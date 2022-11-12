@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+  
+}
+
+    <div class="alert alert-primary alert-dismissible">
+        <div class="row">
+            <div class="col-11">
+            </div>
+            <div class="col-1 text-right">
+                <a href="@Url.Action("Vouchers", "TF1")" class="btn btn-outline-info btn-icon rounded-circle">
+                    <i class="fal fa-long-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    @(Html.DevExtreme().TextBox().Width("100%")
+        .Placeholder("enter payment description here ....").ID("txtDescriptions"))
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>

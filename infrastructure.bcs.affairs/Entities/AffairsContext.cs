@@ -14,10 +14,17 @@ namespace infrastructure.bcs.affairs.Entities
         {
         }
 
-        public AffairsContext(DbContextOptions<AffairsContext> options) : base(options)
-        {
+        public AffairsContext(DbContextOptions<AffairsContext> options) : base(options)  {  }
 
-        }
+        public DbSet<BethelTypes> BethelType { get; set; }
+        public DbSet<Bethels> Bethel { get; set; }
+        public DbSet<Countries> Country { get; set; }
+        public DbSet<Departments> Department { get; set; }
+
+
+        #region view
+        public DbSet<BethelLists> BethelList { get; set; }
+        #endregion 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,14 +36,16 @@ namespace infrastructure.bcs.affairs.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Departments>(entity => {
-            //    entity.ToTable("Departments", "Sapphire");
-            //    entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
-            //});
-            //modelBuilder.Entity<Projects>(entity => {
-            //    entity.ToTable("Projects", "Sapphire");
-            //    entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
-            //});
+            modelBuilder.Entity<BethelTypes>(entity =>
+            {
+                entity.ToTable("BethelTypes", "Registration");
+                entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
+            });
+            modelBuilder.Entity<Departments>(entity =>
+            {
+                entity.ToTable("Departments", "Manager");
+                entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
+            });
             //modelBuilder.Entity<RequisitionTypes>(entity => {
             //    entity.ToTable("RequisitionTypes", "Sapphire");
             //    entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
@@ -69,13 +78,13 @@ namespace infrastructure.bcs.affairs.Entities
             //    entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
             //});
 
-            //modelBuilder.Entity<Currencies>().ToTable("Currencies", "Sapphire");
-            //modelBuilder.Entity<Requisitions>().ToTable("Requisitions", "Sapphire");
+            modelBuilder.Entity<Countries>().ToTable("Countries", "Manager");
+            modelBuilder.Entity<Bethels>().ToTable("Bethels", "Registration");
             //modelBuilder.Entity<SupplierUsers>().ToTable("SupplierUsers", "Sapphire");
             //modelBuilder.Entity<Users>().ToTable("Users", "Sapphire");
 
             ////views
-            //modelBuilder.Entity<vwUsers>(entity => { entity.ToView("vwUsers", "Sapphire"); });
+            modelBuilder.Entity<BethelLists>(entity => { entity.ToView("BethelLists", "Registration"); });
             //modelBuilder.Entity<vwRequisitions>(entity => { entity.ToView("vwRequisitions", "Sapphire"); });
 
         }

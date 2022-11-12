@@ -1,0 +1,12 @@
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\bin\Debug\net6.0\infrastructure.bcs.affairs.deps.json
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\bin\Debug\net6.0\infrastructure.bcs.affairs.dll
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\bin\Debug\net6.0\infrastructure.bcs.affairs.pdb
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\infrastructure.bcs.affairs.csproj.AssemblyReference.cache
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\infrastructure.bcs.affairs.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\infrastructure.bcs.affairs.AssemblyInfoInputs.cache
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\infrastructure.bcs.affairs.AssemblyInfo.cs
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\infrastructure.bcs.affairs.csproj.CoreCompileInputs.cache
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\infrastructure.bcs.affairs.dll
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\refint\infrastructure.bcs.affairs.dll
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\infrastructure.bcs.affairs.pdb
+C:\Users\mfonu\OneDrive\Source\bcs.affairs\infrastructure.bcs.affairs\obj\Debug\net6.0\ref\infrastructure.bcs.affairs.dll

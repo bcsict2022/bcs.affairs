@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "jmmGVs1q4sDfb0QjH4CXC0MXqikZrP5ChfWxAVGGsHg=",
+  "Source": "api.bcs.affairs",
+  "BasePath": "_content/api.bcs.affairs",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

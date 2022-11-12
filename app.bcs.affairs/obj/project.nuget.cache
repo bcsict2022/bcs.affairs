@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "x+J1WzUpGb+mx0ZMIAkRY4D3LH5L77zIr7p2cTkXd3PywlALnU9hJ4EZNHGUj9k4HRFfySwvq2fDyT31Zo/GdA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\mfonu\\OneDrive\\Source\\bcs.affairs\\app.bcs.affairs\\app.bcs.affairs.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mfonu\\.nuget\\packages\\devextreme.aspnet.data\\2.8.6\\devextreme.aspnet.data.2.8.6.nupkg.sha512",
+    "C:\\Users\\mfonu\\.nuget\\packages\\maxmind.db\\4.0.0\\maxmind.db.4.0.0.nupkg.sha512",
+    "C:\\Users\\mfonu\\.nuget\\packages\\maxmind.geoip2\\5.1.0\\maxmind.geoip2.5.1.0.nupkg.sha512",
+    "C:\\Users\\mfonu\\.nuget\\packages\\microsoft.csharp\\4.4.0\\microsoft.csharp.4.4.0.nupkg.sha512",
+    "C:\\Users\\mfonu\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\mfonu\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",
+    "C:\\Users\\mfonu\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+    "C:\\Users\\mfonu\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\mfonu\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
