@@ -47,5 +47,7 @@ public static class ServiceExtensions
         collection.AddTransient<ISetupRegistrationTables, FactorySetupRegistrationTables>();
         collection.AddTransient<ISetupManagerTables, FactorySetupManagerTables>();
         collection.AddTransient<IBethels, FactoryBethels>();
+        collection.AddTransient<IAffairsNavigations, FactoryAffairsNavigations>();
+        collection.AddTransient<IUsers, FactoryUsers>();
     }
 }

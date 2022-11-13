@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="_Head" />
+    @RenderSection("HeadBlock", required: false)
+</head>
+<body class="mod-bg-1 mod-nav-link mod-nav-link @ViewBag.PreemptiveClass">
+    <partial name="_ScriptsLoadingSaving" />
+    <div class="page-wrapper">
+        <div class="page-inner">
+
+            <div class="page-content-wrapper">
+
+                <main id="js-page-content" role="main" class="page-content">
+                    @if (ViewBag.PreemptiveClass?.Length > 0)
+                    {
+                    }
+                    else
+                    {
+                        @*<partial name="_PageBreadcrumb" />*@
+                        <div class="subheader"><partial name="_PageHeading" />@RenderSection("Subheaderblock", required: false)</div>
+                    }
+                    @RenderBody()
+                </main>
+                <partial name="_PageFooter" />
+            </div>
+        </div>
+    </div>
+    <partial name="_ScriptsBasePlugins" />
+    @RenderSection("ScriptsBlock", required: false)
+</body>
+</html>

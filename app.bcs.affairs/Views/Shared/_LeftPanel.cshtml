@@ -1,0 +1,24 @@
+﻿<aside class="page-sidebar">
+    <partial name="_Logo" />
+    <nav id="js-primary-nav" class="primary-nav" role="navigation">
+        <partial name="_NavFilter" />
+        @*<partial name="_NavInfoCard" />*@
+
+        @if (@Context.Session.GetInt32("_GroupId") == null)
+        {
+            @section Scripts {
+            <script type="text/javascript">
+                location.href = '@Url.Action("Index", "Home")';
+            </script>
+        }
+        }
+        else
+        {
+            @await Component.InvokeAsync("AppNavigation", new { bandId = @Context.Session.GetInt32("_GroupId") })
+        }
+
+
+        <partial name="_NavFilterMsg" />
+    </nav>
+    <partial name="_NavFooter" />
+</aside>
