@@ -90,8 +90,8 @@ namespace api.bcs.affairs.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteDepartment")]
-        public async Task<IActionResult> RemoveDepartment([FromQuery] int id)
+        [Route("deleteDepartment{id}")]
+        public async Task<IActionResult> RemoveDepartment( int id)
         {
             try
             {
@@ -106,5 +106,77 @@ namespace api.bcs.affairs.Controllers
             }
         }
         #endregion
+
+        #region betheltypes
+
+        [HttpGet]
+        [Route("getBetheltypes")]
+        public async Task<IActionResult> GetBetheltypes()
+        {
+            try
+            {
+                List<BethelTypes> result = await _repo.GetBetheltypesAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+
+        }
+
+        [HttpPost]
+        [Route("addBetheltype")]
+        public async Task<IActionResult> CreateBetheltype([FromBody] vmSetupTable1 model)
+        {
+            try
+            {
+                var response = await _repo.CreateBetheltypesAsync(model);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                var mmmm = e.Message.ToString();
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+        }
+
+        [HttpPut]
+        [Route("modifyBetheltype")]
+        public async Task<IActionResult> EditBetheltype([FromBody] BethelTypes model)
+        {
+            try
+            {
+                await _repo.EditBetheltypeAsync(model);
+                return NoContent();
+
+
+            }
+            catch (Exception e)
+            {
+                var mmmm = e.Message.ToString();
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+        }
+
+        [HttpDelete]
+        [Route("deleteBetheltype{id}")]
+        public async Task<IActionResult> RemoveBetheltype(int id)
+        {
+            try
+            {
+                await _repo.DeleteBetheltypeAsync(id);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                var mmmm = e.Message.ToString();
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+        }
+        #endregion
+
     }
 }

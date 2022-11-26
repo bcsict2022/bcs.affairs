@@ -57,11 +57,11 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-        public async Task<List<MenuCommands>> GetProfileMenuItems(int Id)
+        public async Task<List<MenuCommands>> GetProfileMenuItems(int id)
         {
             try
             {
-                var menus = await _basedContext.MenuCommand.FromSqlRaw("Manager.GetBandMenus @Id = {0}", Id).ToListAsync();
+                var menus = await _basedContext.MenuCommand.FromSqlRaw("Manager.GetBandMenus @Id = {0}", id).ToListAsync();
                 return menus;
             }
             catch (Exception ex)

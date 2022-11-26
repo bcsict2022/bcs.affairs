@@ -16,7 +16,29 @@
     </div>
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    @(Html.DevExtreme().TextBox().Width("100%")
-        .Placeholder("enter payment description here ....").ID("txtDescriptions"))
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+     <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-container show">
+                <div class="panel-content">
+                    @(Html.DevExtreme().DataGrid().ID("usgrid").ShowColumnLines(false).ShowRowLines(true).RowAlternationEnabled(true).ShowBorders(true).SearchPanel(s => s.Visible(true).HighlightSearchText(true).HighlightSearchText(true).Width(500))
+                        .DataSource(ds => ds.Mvc().Controller("Home").Key("EmailAddress").LoadAction("GetUsers"))
+                                                                          .Columns(c =>
+                                                                          {
+                                                                              c.Add().DataField("UserId").VisibleIndex(1).Width("15%").Caption("User Id").SortIndex(0).SortOrder(SortOrder.Asc).AllowEditing(false);
+                                                                              c.Add().DataField("UserFullName").VisibleIndex(5).Width("18%").Caption("Full Name");
+                                                                              c.Add().DataField("Email").VisibleIndex(5).Width("10%").Caption("Email");
+                                                                              c.Add().DataField("PhoneNumber").VisibleIndex(5).Width("10%").Caption("Phone Number");
+                                                                              c.Add().DataField("CompanyName").VisibleIndex(5).Width("12%").Caption("Unit/Command");
+                                                                              c.Add().DataField("UserStatus").VisibleIndex(5).Width("10%").Caption("Status");
+                                                                              c.Add().DataField("CreatedUser").VisibleIndex(6).Width("10%").Caption("Transaction By").AllowEditing(false);
+                                                                              c.Add().DataField("TransactionDate").Format("dd-MM-yyyy").DataType(GridColumnDataType.Date).VisibleIndex(7).Width("10%").AllowEditing(false);
+                                                                          }).Editing(ed =>
+                                                                          {
+                                                                              ed.AllowUpdating(true);
+                                                                              ed.Mode(GridEditMode.Popup);
+                                                                          }).Paging(p => p.Enabled(true).PageSize(15)).Width("100%").Pager(pg => pg.ShowInfo(true).ShowPageSizeSelector(true).ShowNavigationButtons(true)))
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

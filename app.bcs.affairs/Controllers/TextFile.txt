@@ -1,0 +1,125 @@
+﻿
+*************** Edit
+
+ //if (string.IsNullOrEmpty(HttpContext.Session.GetString("_userId")))
+                //{
+                //    return RedirectToAction("Index", "Home");
+                //}
+                //https://localhost:7177/api/
+                //using (var httpClient = new HttpClient())
+                //{
+                //    var rn = JsonConvert.DeserializeObject<Departments>(value: values);
+
+                //    var model = new Departments()
+                //    {
+                //        Id = key,
+                //        DepartmentDescription = rn.DepartmentDescription
+                //    };
+                //    StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+                //    using (var response = await httpClient.PutAsync("ManagerTables/modifyDepartment", content))
+                //    {
+                //        if (response.IsSuccessStatusCode)
+                //        {
+                //            return Ok();
+                //        }
+                //    }
+                //}
+
+
+
+delete
+
+using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.DeleteAsync("ManagerTables/deleteDepartment" + key))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        //https://localhost:7177/api/
+                    }
+                }
+
+
+
+
+        //public async Task<IActionResult> GetUsers(DataSourceLoadOptions loadOptions)
+        //{
+        //    try
+        //    {
+        //        //string url = ri("Users/getUser");
+        //        //var response = await _affairsService.SendRequestAsync<vmUserDetails[]>(url, HttpMethod.Get);
+
+        //        //var result = DataSourceLoader.Load(response, loadOptions);
+        //        //var resultJson = JsonConvert.SerializeObject(result);
+        //        //return Content((string)resultJson, "application/json");
+        //        //return Content((string)_repo.GetUsers(loadOptions: loadOptions, companyId: companyId), "application/json");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Content("");
+        //    }
+        //}
+
+
+        //public async Task<List<vmUserDetails>> GetUsers()
+        //{
+        //    _users = new List<vmUserDetails>();
+
+        //    using (var client = new HttpClient(_httpClientHandler))
+        //    {
+        //        using (var response = await client.GetAsync("https://localhost:7177/api/"))
+        //        {
+        //            string apiResponse = await response.Content.ReadAsStringAsync();
+        //            _users = JsonConvert.DeserializeObject<List<vmUserDetails>>(apiResponse);
+        //        }
+        //    }
+        //    return _users;
+        //}
+
+
+        //[HttpGet]
+        //public async Task<vmUserDetails> GetUserById(int id)
+        //{
+        //    _user = new vmUserDetails();
+
+        //    using (var client = new HttpClient(_httpClientHandler))
+        //    {
+        //        using (var response = await client.GetAsync("https://localhost:7177/api/"+ id))
+        //        {
+        //            string apiResponse = await response.Content.ReadAsStringAsync();
+        //            _user = JsonConvert.DeserializeObject<vmUserDetails>(apiResponse);
+        //        }
+        //    }
+        //    return _user;
+        //}
+
+        //[HttpPost]
+        //public async Task<vmUserDetails> AddUser(vmUserDetails vm)
+        //{
+        //    _user = new vmUserDetails();
+
+        //    using (var client = new HttpClient(_httpClientHandler))
+        //    {
+        //        StringContent content = new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json");
+        //        using (var response = await client.PostAsync("https://localhost:7177/api/", content))
+        //        {
+        //            string apiResponse = await response.Content.ReadAsStringAsync();
+        //            _user = JsonConvert.DeserializeObject<vmUserDetails>(apiResponse);
+        //        }
+        //    }
+        //    return _user;
+        //}
+
+        //[HttpDelete]
+        //public async Task<string> DeleteUser(int id)
+        //{
+        //    string message = "";
+
+        //    using (var client = new HttpClient(_httpClientHandler))
+        //    {
+        //        using (var response = await client.DeleteAsync("https://localhost:7177/api/" + id))
+        //        {
+        //            message = await response.Content.ReadAsStringAsync();
+        //        }
+        //    }
+        //    return message;
+        //}

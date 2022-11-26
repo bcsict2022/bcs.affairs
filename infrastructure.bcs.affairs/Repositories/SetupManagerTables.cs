@@ -17,5 +17,11 @@ namespace infrastructure.bcs.affairs.Repositories
         Task<List<Departments>> GetDepartmentsAsync();
         Task EditDepartmentAsync(Departments vm);
         Task DeleteDepartmentAsync(int id);
+
+
+        Task<bool> CreateBetheltypesAsync(vmSetupTable1 vm);
+        Task<List<BethelTypes>> GetBetheltypesAsync();
+        Task EditBetheltypeAsync(BethelTypes vm);
+        Task DeleteBetheltypeAsync(int id);
     }
 }

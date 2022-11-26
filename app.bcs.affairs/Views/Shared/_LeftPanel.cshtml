@@ -4,7 +4,7 @@
         <partial name="_NavFilter" />
         @*<partial name="_NavInfoCard" />*@
 
-        @if (@Context.Session.GetInt32("_GroupId") == null)
+        @*@if (@Context.Session.GetInt32("_GroupId") == null)
         {
             @section Scripts {
             <script type="text/javascript">
@@ -15,9 +15,10 @@
         else
         {
             @await Component.InvokeAsync("AppNavigation", new { bandId = @Context.Session.GetInt32("_GroupId") })
-        }
+            @await Component.InvokeAsync("AppNavigation", new { bandId = 1 })
+        }*@
 
-
+        @await Component.InvokeAsync("AppNavigation", new { bandId = 1 })
         <partial name="_NavFilterMsg" />
     </nav>
     <partial name="_NavFooter" />

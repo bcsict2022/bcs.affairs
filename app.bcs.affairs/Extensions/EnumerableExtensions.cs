@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace UnifiedFGNBooks.V3.UI.Extensions
+namespace app.bcs.affairs.Extensions
 {
     public static class EnumerableExtensions
     {

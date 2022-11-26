@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace infrastructure.bcs.affairs.Models
 {
@@ -24,17 +25,10 @@ namespace infrastructure.bcs.affairs.Models
     }
     public class vmUser
     {
-        [Key, Required(ErrorMessage = "Email Address is required"), StringLength(50), DisplayName("Email Address")]
-        public string UserId { get; set; }
-
-        [Required(ErrorMessage = "New Password is required"), DisplayName("Last Name")]
-        public string LastName { get; set; }
-
-        [Required(ErrorMessage = "New Password is required"), DisplayName("First Name")]
+        public string CreatedUser { get; set; }
         public string FirstName { get; set; }
-
-        [Required(ErrorMessage = "Created User is required"), DisplayName("Created User")]
-        public string Createdby { get; set; }
+        public string LastName { get; set; }
+        public string UserId { get; set; }
 
     }
     public class vmLogin
@@ -69,15 +63,13 @@ namespace infrastructure.bcs.affairs.Models
     public class vmUserDetails
     {
         [Key]
-        public string UserId { get; set; }
-        public string UserFullName { get; set; }
-        public string CompanyName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string CompanyId { get; set; }
+        public string EmailAddress { get; set; }
+        public string LastName { get; set; }
+        public string FirstName { get; set; }
+        public bool IsFirstLogin { get; set; }
         public bool? UserStatus { get; set; }
-        public DateTime? TransactionDate { get; set; }
         public string CreatedUser { get; set; }
+        public DateTime? TransactionDate { get; set; }
     }   
     public class vmPasswordChange
     {

@@ -1,4 +1,5 @@
-﻿@*@model List<UnifiedFGNBooks.V3.Infrastructure.Entities.MenuCommands>
+﻿@using app.bcs.affairs.Extensions
+@model List<app.bcs.affairs.Models.MenuCommands>
 @{
     var pageName = ViewData["PageName"]?.ToString().ToLower();
     var menuItems = Model.Where(m => m.MenusId == 0).ToList();
@@ -61,4 +62,3 @@
     }
 
 </ul>
-*@

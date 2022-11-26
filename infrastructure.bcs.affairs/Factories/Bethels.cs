@@ -35,7 +35,6 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-
         public async Task DeleteBethelAsync(string id)
         {
             try
@@ -49,22 +48,42 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-
         public async Task EditBethelAsync(Bethels vm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _basedContext.Entry(vm).State = EntityState.Modified;
+                await _basedContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
-        public async Task<List<BethelLists>> GetBethelDetailsAsync(string id)
+        public async Task<BethelLists> GetBethelDetailsAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var lists = await _basedContext.BethelList.ToListAsync();
+                return lists.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
         public async Task<List<BethelLists>> GetBethelsAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var lists = await _basedContext.BethelList.ToListAsync();
+                return lists;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
         public async Task<List<BethelLists>> GetBethelsAsync(string countryId)
         {
             try

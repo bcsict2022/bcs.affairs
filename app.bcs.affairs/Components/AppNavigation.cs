@@ -1,26 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using app.bcs.affairs.APIServices;
+using app.bcs.affairs.Models;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 //using UnifiedFGNBooks.V3.Infrastructure.Repositories;
 
-namespace UnifiedFGNBooks.V3.UI.Components
+namespace app.bcs.affairs.Components
 {
     public class AppNavigation : ViewComponent
     {
-        //private readonly IFGNBooksNavigations _repo;
+        private readonly IBCSAffairsService _affairsService;
 
-        //public AppNavigation(IFGNBooksNavigations _navigations)
-        //{
-        //    _repo = _navigations;
-        //}
+        public AppNavigation(IBCSAffairsService affairsService)
+        {
+            _affairsService = affairsService;
+        }
 
-        //public async Task<IViewComponentResult> InvokeAsync(int bandId)
-        //{
-        //    var bandMenus = await _repo.GetProfileMenuItems(bandId);
+        public async Task<IViewComponentResult> InvokeAsync(int bandId)
+        {
+            var url = "AffairsNavigations/getProfileMenuItems";
+            var bandMenus = await _affairsService.GetAllByIdAsync<MenuCommands[]>(url, bandId.ToString());
+          
 
-        //    return View(bandMenus);
-        //}
+            return View(bandMenus.ToList());
+        }
     }
 }

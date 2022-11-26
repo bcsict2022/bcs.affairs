@@ -2,8 +2,10 @@
 using infrastructure.bcs.affairs.Models;
 using infrastructure.bcs.affairs.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -58,7 +60,7 @@ namespace infrastructure.bcs.affairs.Factories
                   SecurityStamp = passwordSalt,
                   UserStatus =   true,
                   IsFirstLogin = false,
-                  CreatedUser = vm.Createdby,
+                  CreatedUser = "", // vm.Createdby,
                   TransactionDate = DateTime.Today.Date
                 };
                 await _basedContext.User.AddAsync(user);
@@ -71,8 +73,6 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-
-
         public bool NewPassword(string userId, string newPassword)
         {
             try
@@ -100,16 +100,13 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-        public Task DeleteUserAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task EditUserAsync(Users vm)
+        public async Task DeleteUserAsync(string id)
         {
             try
             {
-                _basedContext.Entry(vm).State = EntityState.Modified;
+                var user = _basedContext.User.Find(id);
+
+                user.UserStatus = false; 
                 await _basedContext.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -117,12 +114,37 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-
-        public async Task<List<Users>> GetUsersAsync()
+        public async Task EditUserAsync(vmUserDetails vm)
         {
             try
             {
-                var lists = await _basedContext.User.ToListAsync();
+                var user = _basedContext.User.Find(vm.EmailAddress);
+              
+                user.FirstName = vm.FirstName;
+                user.LastName = vm.LastName;
+           
+                await _basedContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<List<vmUserDetails>> GetUsersAsync()
+        {
+            try
+            {
+                var lists = await _basedContext.User.Select(p => new vmUserDetails()
+                {
+                    EmailAddress = p.EmailAddress,
+                    LastName = p.LastName,  
+                    FirstName = p.FirstName,
+                    IsFirstLogin = p.IsFirstLogin,
+                    UserStatus = p.UserStatus,
+                    CreatedUser = p.CreatedUser,
+                    TransactionDate = p.TransactionDate
+                }).ToListAsync();
+
                 return lists;
             }
             catch (Exception ex)
@@ -130,8 +152,6 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-
-
         public async Task<String> GetLogin(vmLogin vm)
         {
             try

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 //using UnifiedFGNBooks.V3.Infrastructure.Entities;
 using Microsoft.AspNetCore.Html;
 
-namespace UnifiedFGNBooks.V3.UI.Extensions
+namespace app.bcs.affairs.Extensions
 {
     public static class IdentityExtensions
     {

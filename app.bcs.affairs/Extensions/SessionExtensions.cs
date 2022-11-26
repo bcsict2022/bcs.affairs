@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace UnifiedFGNBooks.V3.UI.Extensions
+namespace app.bcs.affairs.Extensions
 {
     public static class SessionExtensions
     {

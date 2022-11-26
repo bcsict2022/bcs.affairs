@@ -22,7 +22,7 @@ namespace api.bcs.affairs.Controllers
         {
             try
             {
-                List<Users> result = await _repo.GetUsersAsync();
+                List<vmUserDetails> result = await _repo.GetUsersAsync();
                 return Ok(result);
             }
             catch (Exception)
@@ -32,9 +32,10 @@ namespace api.bcs.affairs.Controllers
 
         }
 
+      
         [HttpPost]
         [Route("addUser")]
-        public async Task<IActionResult> CreateDepartment([FromBody] vmUser model)
+        public async Task<IActionResult> CreateUser([FromBody]vmUser model)
         {
             try
             {
@@ -51,7 +52,7 @@ namespace api.bcs.affairs.Controllers
 
         [HttpPut]
         [Route("modifyUser")]
-        public async Task<IActionResult> EditDepartment([FromBody] Users model)
+        public async Task<IActionResult> EditUser([FromBody] vmUserDetails model)
         {
             try
             {
@@ -68,8 +69,8 @@ namespace api.bcs.affairs.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteUser")]
-        public async Task<IActionResult> RemoveDepartment([FromQuery] string id)
+        [Route("deleteUser{id}")]
+        public async Task<IActionResult> RemoveUser(string id)
         {
             try
             {

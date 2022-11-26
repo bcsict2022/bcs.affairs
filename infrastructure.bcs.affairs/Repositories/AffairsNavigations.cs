@@ -11,7 +11,7 @@ namespace infrastructure.bcs.affairs.Repositories
 {
     public interface IAffairsNavigations
     {
-        Task<List<MenuCommands>> GetProfileMenuItems(int Id);
+        Task<List<MenuCommands>> GetProfileMenuItems(int id);
         Task<List<MenuCommands>> GetMenuCommands();
         Task<bool> CreateProfileMenus(string menuGroup, string menuHeads, string menuLines);
         Task<List<GetProfileMenuPermissions>> GetProfileMenuCommands(int profileId);

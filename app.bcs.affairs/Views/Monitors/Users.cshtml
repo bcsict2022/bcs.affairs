@@ -1,0 +1,164 @@
+﻿@model app.bcs.affairs.Models.vmUser
+@{
+    ViewData["Title"] = "Users";
+    ViewData["PageName"] = "monitors_users";
+    ViewData["Heading"] = "<i class='fal fa-shield-alt'></i> Monitors: <span class='fw-300'>Users</span>";
+    ViewData["Category1"] = "Monitors";
+    ViewData["PageIcon"] = "fa-shield-alt";
+}
+@section HeadBlock {
+
+}
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <form id="PostForm">
+                        
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-4">
+                                    @Html.LabelFor(m => m.UserId)
+                                    @(Html.DevExtreme().TextBoxFor(m => m.UserId).Width("100%")
+                                        .Placeholder("enter email address here ....")
+                                        .ID("txtUserId"))
+                                </div>
+                                <div class="col-4">
+                                    @Html.LabelFor(m => m.LastName)
+                                    @(Html.DevExtreme().TextBoxFor(m => m.LastName).Width("100%")
+                                        .Placeholder("enter last name here ....")
+                                        .ID("txtUserFullName"))
+                                </div>
+                                <div class="col-4">
+                                    @Html.LabelFor(m => m.FirstName)
+                                    @(Html.DevExtreme().TextBoxFor(m => m.FirstName).Width("100%")
+                                        .Placeholder("enter first name here ....")
+                                        .ID("txtEmail"))
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                       @* @Context.Session.GetString("_formCompleted")
+                        @Context.Session.GetString("_phoneNumber")*@
+                        <div class="form-group">
+                            @*@Html.DevExtreme().TextBoxFor(m => m.CreatedUser).Value("mfonuwa@gmail.com").Visible(false)*@
+                            @(Html.DevExtreme().Button().Text("Submit").Height(35)
+                                .Width("100%").UseSubmitBehavior(true)
+                                .Type(ButtonType.Default)
+                                .ID("button"))
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-container show">
+                <div class="panel-content">
+                    @(Html.DevExtreme().DataGrid().ID("usgrid").ShowColumnLines(false).ShowRowLines(true).RowAlternationEnabled(true).ShowBorders(true).SearchPanel(s => s.Visible(true).HighlightSearchText(true).HighlightSearchText(true).Width(500))
+                        .DataSource(ds => ds.Mvc().Controller("Monitors").Key("EmailAddress").LoadAction("GetUsers")
+                        .UpdateAction("EditUsers").DeleteAction("DeleteUsers"))
+                        .Columns(c =>
+                        {
+                            c.Add().DataField("EmailAddress").VisibleIndex(1).Width("20%").Caption("User Id").SortIndex(0).SortOrder(SortOrder.Asc).AllowEditing(false);
+                            c.Add().DataField("LastName").VisibleIndex(5).Width("18%").Caption("Last Name");
+                            c.Add().DataField("FirstName").VisibleIndex(5).Width("18%").Caption("First Name");
+                            c.Add().DataField("IsFirstLogin").VisibleIndex(5).Width("10%").Caption("First Login?");
+                            c.Add().DataField("UserStatus").VisibleIndex(5).Width("10%").Caption("Status");
+                            c.Add().DataField("CreatedUser").VisibleIndex(6).Width("10%").Caption("Transaction By").AllowEditing(false);
+                            c.Add().DataField("TransactionDate").Format("dd-MM-yyyy").DataType(GridColumnDataType.Date).VisibleIndex(7).Width("10%").AllowEditing(false);
+                        }).Editing(ed =>
+                        {
+                            ed.AllowUpdating(true);
+                            ed.Mode(GridEditMode.Popup);
+                            ed.AllowDeleting(true);
+                        }).Paging(p => p.Enabled(true).PageSize(15)).Width("100%").Pager(pg => pg.ShowInfo(true).ShowPageSizeSelector(true).ShowNavigationButtons(true)))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loader"></div>
+<script type="text/javascript">
+
+     function getCompanyId() {
+         var companyId = $("#dplCompany").dxSelectBox("instance").option("value");
+         if (companyId == null)
+             companyId = '';
+         return companyId;
+     }
+
+     $(function () {
+         $("#PostForm").on('submit', function (e) {
+             $('#loader').show();
+             e.preventDefault();
+
+             setTimeout(() => {
+                 var dataToPost = $(this).serialize();
+
+                 $.post('@Url.Action("Users", "Monitors")', dataToPost)
+
+                     .done(function (response, status, jqxhr) {
+
+                         if (response.mstatus === "success") {
+                              DevExpress.ui.notify({
+                                     message: "New Users submitted successfully",
+                                     type: "success",
+                                     displayTime: 6000,
+                                     height: 55,
+                                     position: "top left"
+                              });
+                         } else {
+                             DevExpress.ui.notify({
+                                     message: response.mstatus,
+                                     type: "error",
+                                     displayTime: 6000,
+                                     height: 55,
+                                     position: "top"
+                             });
+                         }
+
+
+                         $("#txtUserId").dxTextBox("instance").option('value', '');
+                         $("#txtUserFullName").dxTextBox("instance").option('value', '');
+                         $("#txtEmail").dxTextBox("instance").option('value', '');
+                         //$("#txtPhoneNumber").dxTextBox("instance").option('value', '');
+
+                         reloadData();
+
+                         $('#loader').hide();
+                     })
+                     .fail(function (response, status, error) {
+                         DevExpress.ui.notify({
+                                     message: response.mstatus,
+                                     type: "error",
+                                     displayTime: 6000,
+                                     height: 55,
+                                     position: "top"
+                             });
+                         e.preventDefault();
+                         $('#loader').hide();
+                     });
+
+             });
+         });
+     });
+
+     function reloadData() {
+         $("#usgrid").dxDataGrid("getDataSource").reload();
+     }
+
+
+    function refreshGrid(data) {
+         $("#usgrid").dxDataGrid("instance").refresh();
+     }
+</script>
+
+
+
+

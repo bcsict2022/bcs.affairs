@@ -20,4 +20,5 @@ namespace infrastructure.bcs.affairs.Entities
         public int Id { get; set; }
         public string DepartmentDescription { get; set; }
     }
+
 }

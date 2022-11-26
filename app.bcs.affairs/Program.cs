@@ -1,7 +1,27 @@
+using app.bcs.affairs.APIServices;
+
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+//builder.Services.AddHttpClient("bcs_affairs_api", c =>
+//{
+//    c.BaseAddress = new Uri("https://localhost:7177/api/");
+//});
+
+
+builder.Services.AddHttpClient<IBCSAffairsService, BCSAffairsService>(c =>
+{
+    c.BaseAddress = new Uri("https://localhost:7177/api/");
+});
+
+
 
 var app = builder.Build();
 
@@ -19,6 +39,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseCookiePolicy();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

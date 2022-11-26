@@ -19,6 +19,24 @@ namespace infrastructure.bcs.affairs.Factories
             _basedContext = basedContext;
         }
 
+        public async Task<bool> CreateBetheltypesAsync(vmSetupTable1 vm)
+        {
+            try
+            {
+                var departments = new BethelTypes
+                {
+                    BethelTypeDescription = vm.Description
+                };
+                await _basedContext.BethelType.AddAsync(departments);
+                await _basedContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<bool> CreateDepartmentAsync(vmSetupTable1 vm)
         {
             try
@@ -30,8 +48,21 @@ namespace infrastructure.bcs.affairs.Factories
                 await _basedContext.Department.AddAsync(departments);
                 await _basedContext.SaveChangesAsync();
 
-
                 return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task DeleteBetheltypeAsync(int id)
+        {
+            try
+            {
+                var list = await _basedContext.BethelType.FindAsync(id);
+                _basedContext.BethelType.Remove(list);
+                await _basedContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -51,12 +82,38 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
+
+        public async Task EditBetheltypeAsync(BethelTypes vm)
+        {
+           try
+            {
+                _basedContext.Entry(vm).State = EntityState.Modified;
+                await _basedContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task EditDepartmentAsync(Departments vm)
         {
             try
             {
                 _basedContext.Entry(vm).State = EntityState.Modified;
                 await _basedContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<BethelTypes>> GetBetheltypesAsync()
+        {
+            try
+            {
+                var list = await _basedContext.BethelType.ToListAsync();
+                return list;
             }
             catch (Exception ex)
             {

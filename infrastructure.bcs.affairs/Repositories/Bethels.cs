@@ -13,7 +13,7 @@ namespace infrastructure.bcs.affairs.Repositories
         Task<bool> CreateBethelAsync(vmBethel vm);
         Task<List<BethelLists>> GetBethelsAsync();
         Task<List<BethelLists>> GetBethelsAsync(string countryId);
-        Task<List<BethelLists>> GetBethelDetailsAsync(string id);
+        Task<BethelLists> GetBethelDetailsAsync(string id);
         Task EditBethelAsync(Bethels vm);
         Task DeleteBethelAsync(string id);
     }
