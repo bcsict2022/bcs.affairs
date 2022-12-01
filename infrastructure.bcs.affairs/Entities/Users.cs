@@ -21,6 +21,32 @@ namespace infrastructure.bcs.affairs.Entities
         public bool? UserStatus { get; set; }
         public string CreatedUser { get; set; }
         public DateTime? TransactionDate { get; set; }
+        public int DepartmentId { get; set; }
         
     }
+    public partial class LoginTransactions
+    {
+        public long Id { get; set; }
+        public string UserId { get; set; }
+        public string TransactionType { get; set; }
+        public DateTime TransactionDate { get; set; }
+        public DateTimeOffset TransactionTime1 { get; set; }
+        public string TransactionTime { get; set; }
+    }
+
+    public partial class UserDepartments
+    {
+        [Key]
+        public string EmailAddress { get; set; }
+        public string LastName { get; set; }
+        public string FirstName { get; set; }
+        public bool IsFirstLogin { get; set; }       
+        public bool? UserStatus { get; set; }
+        public string CreatedUser { get; set; }
+        public DateTime? TransactionDate { get; set; }
+        public int DepartmentId { get; set; }
+        public string DepartmentDescription { get; set; }
+        public string UserFullName { get; set; }
+    }
+
 }

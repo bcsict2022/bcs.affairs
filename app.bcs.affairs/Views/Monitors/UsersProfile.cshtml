@@ -1,0 +1,139 @@
+﻿@model app.bcs.affairs.Models.vmUserBand
+@{
+    ViewData["Title"] = "User Profile";
+    ViewData["PageName"] = "Monitors_usersProfile";
+    ViewData["Heading"] = "<i class='fal fa-shield-alt'></i> Monitor: <span class='fw-300'>User's Profile</span>";
+    ViewData["Category1"] = "Monitors";
+    ViewData["PageIcon"] = "fa-shield-alt";
+}
+
+@section HeadBlock {
+
+}
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <form id="PostForm">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-4">
+                                        @Html.LabelFor(m => m.UserId)
+                                        @(Html.DevExtreme().SelectBoxFor(m => m.UserId).ID("dplUsers").ValueExpr("EmailAddress")
+                                        .DisplayExpr("UserFullName").Placeholder("select user here ......")
+                                        .Width("100%").SearchEnabled(true).SearchExpr("UserFullName").SearchMode(DropDownSearchMode.Contains)
+                                        .DataSource(ds => ds.Mvc().Controller("Monitors").LoadAction("GetUsers").Key("EmailAddress"))
+                                        .OnValueChanged("getuserProfile"))
+                                    </div>
+                                    <div class="col-4">
+                                        @Html.Label("Current Profile")
+                                        @(Html.DevExtreme().TextBox().Width("100%").Placeholder("will display current profile here ....").ID("txtProfileName").ReadOnly(true))
+                                    </div>
+                                    <div class="col-4">
+                                        @Html.LabelFor(m => m.BandId)
+                                        @(Html.DevExtreme().SelectBoxFor(m => m.BandId).ID("dplProfile")
+                                            .ValueExpr("Id").DisplayExpr("Name").Placeholder("select profile description here ......")
+                                            .Width("100%").SearchEnabled(true).SearchExpr("Name")
+                                            .SearchMode(DropDownSearchMode.Contains)
+                                            .DataSource(ds => ds.Mvc().Controller("Monitors").LoadAction("GetProfiles").Key("Id")))
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    @(Html.DevExtreme().Button().Text("Submit").Height(35)
+                                        .Width("100%").UseSubmitBehavior(true)
+                                        .Type(ButtonType.Normal).StylingMode(ButtonStylingMode.Outlined)
+                                        .ID("button"))
+                                </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="loader"></div>
+<script type="text/javascript">
+    $(function () {
+        $("#PostForm").on('submit', function (e) {
+            $('#loader').show();
+            e.preventDefault();
+
+            setTimeout(() => {
+                var dataToPost = $(this).serialize();
+
+                $.post('@Url.Action("UsersProfile", "Monitors")', dataToPost)
+
+                    .done(function (response, status, jqxhr) {
+
+                        if (response.mstatus === "success") {
+                            DevExpress.ui.notify({
+                                message: "New User's Profile submitted successfully",
+                                type: "success",
+                                displayTime: 6000,
+                                height: 55,
+                                position: "top"
+                            });
+                        } else {
+                            DevExpress.ui.notify({
+                                message: response.mstatus,
+                                type: "error",
+                                displayTime: 6000,
+                                height: 55,
+                                position: "top"
+                            });
+                        }
+
+
+                        $("#dplUsers").dxSelectBox("instance").reset();
+                        $("#dplProfile").dxSelectBox("instance").reset();
+                        $("#txtProfileName").dxTextBox("instance").option('value', '');
+
+                        reloadData();
+
+                        $('#loader').hide();
+                    })
+                    .fail(function (response, status, error) {
+                        DevExpress.ui.notify({
+                            message: response.mstatus,
+                            type: "error",
+                            displayTime: 6000,
+                            height: 55,
+                            position: "top"
+                        });
+                        e.preventDefault();
+                        $('#loader').hide();
+                    });
+
+            });
+        });
+    });
+
+    function getuserProfile() {
+        var muserId = $("#dplUsers").dxSelectBox("instance").option("value");
+        var myUrl = '@Url.Action("GetUserProfile","Monitors")';
+        $.get(myUrl, { 'Id': muserId }, function (res) {
+            if (res != null) {
+                $("#txtProfileName").dxTextBox("instance").option('value', res.descriptions);
+            } else {
+                $("#txtProfileName").dxTextBox("instance").option('value', '');
+            }
+        });
+
+    }
+
+
+
+    function reloadData() {
+        $("#usgrid").dxDataGrid("getDataSource").reload();
+    }
+
+
+    function refreshGrid(data) {
+        $("#usgrid").dxDataGrid("instance").refresh();
+    }
+</script>
+

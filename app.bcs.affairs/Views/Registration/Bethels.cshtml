@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Bethels";
+    ViewData["PageName"] = "registration_bethels";
+    ViewData["Heading"] = "<i class='fal fa-file-invoice'></i> Registration: <span class='fw-300'>Bethels</span>";
+    ViewData["Category1"] = "Registration";
+    ViewData["PageIcon"] = "fal fa-file-invoice";
+}
+
+@section HeadBlock {
+
+}
+    <div class="alert alert-primary alert-dismissible">
+        <div class="row">
+            <div class="col-11">
+            </div>
+            <div class="col-1 text-right">
+                <a href="@Url.Action("NewBethels", "Registration")" class="btn btn-outline-primary btn-icon rounded-circle">
+                    <i class="fal fa-long-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        @(Html.DevExtreme().DataGrid().ID("usgrid").ShowColumnLines(false).ShowRowLines(true).RowAlternationEnabled(true).ShowBorders(true).SearchPanel(s => s.Visible(true).HighlightSearchText(true).HighlightSearchText(true).Width(500))
+                        .DataSource(ds => ds.Mvc().Controller("Registration").Key("Id")
+                        .LoadAction("GetBethels")
+                        .DeleteAction("DeleteBethels"))
+                        .Columns(c =>
+                        {
+                            c.Add().DataField("BethelDescription").VisibleIndex(3).Width("25%").Caption("Description").SortIndex(0);
+                            c.Add().DataField("BethelTypeDescription").VisibleIndex(3).Width("12%").Caption("Type");
+                            c.Add().DataField("Address").VisibleIndex(3).Width("25%").Caption("Address");
+                            c.Add().DataField("StatesProvince").VisibleIndex(3).Width("13%").Caption("State");
+                            c.Add().DataField("CountryDescription").VisibleIndex(3).Width("10%").Caption("Country");
+                            c.Add().DataField("UserId").VisibleIndex(6).Width("15%").Caption("Transaction By");
+                        }).Paging(p => p.Enabled(true).PageSize(10)).Width("100%").Pager(pg => pg.ShowInfo(true).ShowPageSizeSelector(true).ShowNavigationButtons(true))
+                        .Selection(s => s.Mode(SelectionMode.Single)).HoverStateEnabled(true).OnSelectionChanged("selection_changed"))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loader"></div>
+<script type="text/javascript">
+
+    function selection_changed(selectedItems)
+    {
+        var data = selectedItems.selectedRowsData[0];
+        if (data) {
+          var param = data.Id;
+            var url = '@Url.Action("PaymentVouchers", "Registration", new {id = "__param__"})';
+          window.location.href = url.replace('__param__', encodeURIComponent(param));
+        }
+    }
+
+    function reloadData()
+    {
+        $("#usgrid").dxDataGrid("getDataSource").reload();
+    }
+
+
+    function refreshGrid(data)
+    {
+        $("#usgrid").dxDataGrid("instance").refresh();
+    }
+</script>

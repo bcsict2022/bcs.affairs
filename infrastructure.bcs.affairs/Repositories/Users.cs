@@ -12,9 +12,14 @@ namespace infrastructure.bcs.affairs.Repositories
     {
         Task<bool> CreateUserAsync(vmUser vm);
         Task<List<vmUserDetails>> GetUsersAsync();
-        Task EditUserAsync(vmUserDetails vm);
+        Task EditUserAsync(vmEditUser vm);
         Task DeleteUserAsync(string id);
 
-        Task<String> GetLogin(vmLogin vm);
+        Task<UserNameDetails> GetLogin(vmLogin vm);
+        Task<bool> LoginTransactions(vmLoginTransaction vm);
+        Task<vmLoginUserProfile> GetUserProfile(string id);
+        Task<bool> CreateUserIPDetails(UserIPDetails vm);
+
+        Task<bool> EditUserPasswords(vmPasswordChange vm);
     }
 }

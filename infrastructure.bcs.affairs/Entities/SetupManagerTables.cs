@@ -12,8 +12,14 @@ namespace infrastructure.bcs.affairs.Entities
         [Key]
         public string Id { get; set; }
         public string CountryDescription { get; set; }
+        public string RegionId { get; set; }
     }
-
+    public class Regions
+    {
+        [Key]
+        public string Id { get; set; }
+        public string RegionDescription { get; set; }
+    }
     public class Departments
     {
         [Key]

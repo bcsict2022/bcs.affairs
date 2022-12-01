@@ -16,12 +16,13 @@ namespace infrastructure.bcs.affairs.Models
         [Required(ErrorMessage = "Permission Group is required")]
         public string GroupName { get; set; }
     }
-    public class vmUserGroup
+    public class vmUserBand
     {
         [Required(ErrorMessage = "User Name is required")]
         public string UserId { get; set; }
+
         [Required(ErrorMessage = "Permission Group is required")]
-        public int GroupId { get; set; }
+        public int BandId { get; set; }
     }
     public class vmUser
     {
@@ -29,6 +30,7 @@ namespace infrastructure.bcs.affairs.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserId { get; set; }
+        public int DepartmentId { get; set; }
 
     }
     public class vmLogin
@@ -38,6 +40,11 @@ namespace infrastructure.bcs.affairs.Models
 
         [Required(ErrorMessage = "Password is required"), DataType(DataType.Password), DisplayName("Password")]
         public string Password { get; set; }
+    }
+    public class vmLoginTransaction
+    {
+        public string UserId { get; set; }
+        public string TransactionType { get; set; }
     }
     public class vmDashboard
     {
@@ -57,8 +64,9 @@ namespace infrastructure.bcs.affairs.Models
     {
         [Key]
         public string UserId { get; set; }
-        public string CompanyId { get; set; }
-        public int GroupId { get; set; }
+        public string DepartmentId { get; set; }
+        public int BandId { get; set; }
+        public string BandName { get; set; }
     }  
     public class vmUserDetails
     {
@@ -70,9 +78,15 @@ namespace infrastructure.bcs.affairs.Models
         public bool? UserStatus { get; set; }
         public string CreatedUser { get; set; }
         public DateTime? TransactionDate { get; set; }
+        public int DepartmentId { get; set; }
+        public string DepartmentDescription { get; set; }
+        public string UserFullName { get; set; }
     }   
     public class vmPasswordChange
     {
+
+        [Required(ErrorMessage = "userId is required")]
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "Former Password is required"), DataType(DataType.Password), DisplayName("Former Password")]
         public string FormerPassword { get; set; }
@@ -83,5 +97,17 @@ namespace infrastructure.bcs.affairs.Models
         [Compare("NewPassword", ErrorMessage = "Password mismatch"), Required(ErrorMessage = "Confirm Password is required"), DataType(DataType.Password), DisplayName("Confirm Password")]
         public string ConfirmPassword { get; set; }
     }
-
+    public class UserNameDetails
+    {
+        [Key]
+        public string UserFullName { get; set; }
+    }
+    public class vmEditUser
+    {
+        [Key]
+        public string EmailAddress { get; set; }
+        public string LastName { get; set; }
+        public string FirstName { get; set; }
+        public int DepartmentId { get; set; }
+    }
 }

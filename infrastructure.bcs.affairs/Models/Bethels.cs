@@ -58,4 +58,15 @@ namespace infrastructure.bcs.affairs.Models
         public string UserId { get; set; }
         public DateTime TransactionDate { get; set; }
     }
+    public class BethelDistinctLists
+    {
+        [Key]
+        public string Description { get; set; }
+    }
+    public partial class populations
+    {
+        [Key]
+        public string name { get; set; }
+
+    }
 }

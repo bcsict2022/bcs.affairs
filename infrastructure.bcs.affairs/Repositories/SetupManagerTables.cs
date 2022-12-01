@@ -12,6 +12,8 @@ namespace infrastructure.bcs.affairs.Repositories
     public interface ISetupManagerTables
     {
         Task<List<Countries>> GetCountriesAsync();
+        Task<List<Countries>> GetCountriesInRegionAsync(string id);
+        Task<List<Regions>> GetRegionsAsync();
 
         Task<bool> CreateDepartmentAsync(vmSetupTable1 vm);
         Task<List<Departments>> GetDepartmentsAsync();

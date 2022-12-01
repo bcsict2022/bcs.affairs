@@ -1,44 +1,102 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-  
+﻿@model app.bcs.affairs.Models.vmLogin
+@{
+    ViewData["Title"] = "Gate Way";
+    ViewData["Category1"] = "BCS Affairs";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
-    <div class="alert alert-primary alert-dismissible">
-        <div class="row">
-            <div class="col-11">
+@section HeadBlock {
+}
+@if (ViewBag.loginError != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="mr-2">
+                <span class="icon-stack icon-stack-lg">
+                    <i class="base-4 icon-stack-3x color-danger-400"></i>
+                    <i class="base-4 icon-stack-2x color-danger-600 opacity-70"></i>
+                    <i class="fal fa-exclamation-triangle icon-stack-1x text-white opacity-90"></i>
+                </span>
             </div>
-            <div class="col-1 text-right">
-                <a href="@Url.Action("Vouchers", "TF1")" class="btn btn-outline-info btn-icon rounded-circle">
-                    <i class="fal fa-long-arrow-left"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-     <div class="col-xl-12">
-        <div id="panel-1" class="panel">
-            <div class="panel-container show">
-                <div class="panel-content">
-                    @(Html.DevExtreme().DataGrid().ID("usgrid").ShowColumnLines(false).ShowRowLines(true).RowAlternationEnabled(true).ShowBorders(true).SearchPanel(s => s.Visible(true).HighlightSearchText(true).HighlightSearchText(true).Width(500))
-                        .DataSource(ds => ds.Mvc().Controller("Home").Key("EmailAddress").LoadAction("GetUsers"))
-                                                                          .Columns(c =>
-                                                                          {
-                                                                              c.Add().DataField("UserId").VisibleIndex(1).Width("15%").Caption("User Id").SortIndex(0).SortOrder(SortOrder.Asc).AllowEditing(false);
-                                                                              c.Add().DataField("UserFullName").VisibleIndex(5).Width("18%").Caption("Full Name");
-                                                                              c.Add().DataField("Email").VisibleIndex(5).Width("10%").Caption("Email");
-                                                                              c.Add().DataField("PhoneNumber").VisibleIndex(5).Width("10%").Caption("Phone Number");
-                                                                              c.Add().DataField("CompanyName").VisibleIndex(5).Width("12%").Caption("Unit/Command");
-                                                                              c.Add().DataField("UserStatus").VisibleIndex(5).Width("10%").Caption("Status");
-                                                                              c.Add().DataField("CreatedUser").VisibleIndex(6).Width("10%").Caption("Transaction By").AllowEditing(false);
-                                                                              c.Add().DataField("TransactionDate").Format("dd-MM-yyyy").DataType(GridColumnDataType.Date).VisibleIndex(7).Width("10%").AllowEditing(false);
-                                                                          }).Editing(ed =>
-                                                                          {
-                                                                              ed.AllowUpdating(true);
-                                                                              ed.Mode(GridEditMode.Popup);
-                                                                          }).Paging(p => p.Enabled(true).PageSize(15)).Width("100%").Pager(pg => pg.ShowInfo(true).ShowPageSizeSelector(true).ShowNavigationButtons(true)))
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <span class="h5">Exception:</span>
+                    <br> @ViewBag.loginError
                 </div>
             </div>
         </div>
     </div>
+}
+
+@*<img src="~/images/bg.jpeg" />*@
+<div class="container-fluid" style="background-image:url(~/images/bg.jpeg);background-size: cover;">
+    <div class="row" style="height:60px;margin-top:80px">
+        <div class="col-4">
+        </div>
+        <div class="col-4">
+            <div class="card p-4 border-top-left-radius-0 border-top-right-radius-0">
+                <div class="row">
+                    @*<div class="col-6">
+                    <img src="~/images/DNPFLogo.png" style="display:block;" height="160" width="550" />
+                    </div>
+                    <div class="col-1"></div>*@
+                    <div class="col-12">
+                        @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+                        {
+                            <form id="PostForm">
+                                <div class="row" style="margin-top:10px;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group text-center">
+                                            Gate-Way
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:50px;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            @Html.DevExtreme().TextBoxFor(m => m.UserId).Width("100%").Placeholder("your email address here.....").ID("txtUserId")
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            @Html.DevExtreme().TextBoxFor(m => m.Password).Width("100%").Mode(TextBoxMode.Password).Placeholder("your password here....").ID("txtPassword")
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:10px;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            @(Html.DevExtreme().Button().Text("Log in").Height(35)
+                                                .Width("100%").UseSubmitBehavior(true)
+                                                .Type(ButtonType.Normal)
+                                                .StylingMode(ButtonStylingMode.Outlined)
+                                                .ID("button"))
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:20px;">
+                <div class="col-12 text-center">
+                    <span id="siteseal">
+                        <script async type="text/javascript" src="https://seal.starfieldtech.com/getSeal?sealID=xJQ3RuyeqkDzDMrMvLlbZMlTqDz2e0EwgQsY85ElBGkXQA70YlQsHRRiVqs2"></script>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+        </div>
+    </div>
+
 </div>
+

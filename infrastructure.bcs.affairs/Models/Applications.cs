@@ -14,4 +14,10 @@ namespace infrastructure.bcs.affairs.Models
         public string Parent { get; set; }
         public string Title { get; set; }
     }
+    public class ProfileMenus
+    {
+        public string menuGroup { get; set; }
+        public string menuHeads { get; set; }
+        public string menuLines { get; set; }
+    }
 }

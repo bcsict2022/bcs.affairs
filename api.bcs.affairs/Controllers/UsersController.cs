@@ -31,7 +31,6 @@ namespace api.bcs.affairs.Controllers
             }
 
         }
-
       
         [HttpPost]
         [Route("addUser")]
@@ -52,7 +51,7 @@ namespace api.bcs.affairs.Controllers
 
         [HttpPut]
         [Route("modifyUser")]
-        public async Task<IActionResult> EditUser([FromBody] vmUserDetails model)
+        public async Task<IActionResult> EditUser([FromBody] vmEditUser model)
         {
             try
             {
@@ -87,11 +86,78 @@ namespace api.bcs.affairs.Controllers
 
         [HttpPost]
         [Route("getLogin")]
-        public async Task<IActionResult> GetLogin([FromQuery] vmLogin model)
+        public async Task<IActionResult> GetLogin([FromBody] vmLogin model)
         {
             try
             {
-                var response = await _repo.GetLogin(model);
+                UserNameDetails result = await _repo.GetLogin(model);
+                return Ok(result);
+
+            }
+            catch (Exception e)
+            {
+                var mmmm = e.Message.ToString();
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+        }
+
+        [HttpPost]
+        [Route("addLoginTransaction")]
+        public async Task<IActionResult> GetLogin([FromBody] vmLoginTransaction model)
+        {
+            try
+            {
+                var response = await _repo.LoginTransactions(model);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                var mmmm = e.Message.ToString();
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+        }
+
+        [HttpGet]
+        [Route("getLoginUserProfile{id}")]
+        public async Task<IActionResult> GetLoginUserProfile(string id)
+        {
+            try
+            {
+                vmLoginUserProfile result = await _repo.GetUserProfile(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+
+        }
+
+        [HttpPost]
+        [Route("addUserIPDetails")]
+        public async Task<IActionResult> CreateUserIPDetails([FromBody] UserIPDetails model)
+        {
+            try
+            {
+                var response = await _repo.CreateUserIPDetails(model);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                var mmmm = e.Message.ToString();
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+        }
+
+        [HttpPost]
+        [Route("addmodifyUserPasswords")]
+        public async Task<IActionResult> EditUserPasswords([FromBody] vmPasswordChange model)
+        {
+            try
+            {
+                var response = await _repo.EditUserPasswords(model);
                 return Ok();
 
             }

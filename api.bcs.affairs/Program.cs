@@ -45,7 +45,7 @@ public static class ServiceExtensions
 {
     public static void RegisterRepos(this IServiceCollection collection)
     {
-        collection.AddTransient<ISetupRegistrationTables, FactorySetupRegistrationTables>();
+        collection.AddTransient<IBandPermissions, FactoryBandPermissions>();
         collection.AddTransient<ISetupManagerTables, FactorySetupManagerTables>();
         collection.AddTransient<IBethels, FactoryBethels>();
         collection.AddTransient<IAffairsNavigations, FactoryAffairsNavigations>();

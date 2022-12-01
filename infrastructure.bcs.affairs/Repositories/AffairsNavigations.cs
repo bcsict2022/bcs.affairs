@@ -13,7 +13,8 @@ namespace infrastructure.bcs.affairs.Repositories
     {
         Task<List<MenuCommands>> GetProfileMenuItems(int id);
         Task<List<MenuCommands>> GetMenuCommands();
-        Task<bool> CreateProfileMenus(string menuGroup, string menuHeads, string menuLines);
+        Task<bool> CreateProfileMenus(ProfileMenus vm);
+        //string menuGroup, string menuHeads, string menuLines
         Task<List<GetProfileMenuPermissions>> GetProfileMenuCommands(int profileId);
         //GetDashBoardAggregates GetDashBoardAggregates(string companyId);
         //IEnumerable GetComparisonChartValues(DataSourceLoadOptions loadOptions);

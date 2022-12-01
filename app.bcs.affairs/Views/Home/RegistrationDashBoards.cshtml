@@ -1,0 +1,115 @@
+﻿@*@model UnifiedFGNBooks.V3.Infrastructure.ViewModels.GetDashBoardAggregates*@
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["PageName"] = "intel_analytics_dashboard";
+    ViewData["Category1"] = "Registration";
+    ViewData["Heading"] = "<i class='subheader-icon fal fa-chart-area'></i> BCS <span class='fw-300'>Bethels</span>";
+}
+<link href="~/css/decexstylesheet.css" rel="stylesheet" />
+@section HeadBlock {
+
+}
+@*    @section SubheaderBlock {
+    <div class="subheader-block d-lg-flex align-items-center">
+        <div class="d-inline-flex flex-column justify-content-center mr-3">
+            <span class="fw-300 fs-xs d-block opacity-50">
+                <small>TOTAL MONTHLY TRANSACTIONS</small>
+            </span>
+            <span class="fw-500 fs-xl d-block color-danger-500">
+                @Model.RequestCount.ToString("#,##0")
+            </span>
+        </div>
+        <span class="sparklines hidden-lg-down" sparkType="bar" sparkBarColor="#886ab5" sparkHeight="32px" sparkBarWidth="5px" values="3,4,3,6,7,3,3,6,2,6,4"></span>
+    </div>
+    <div class="subheader-block d-lg-flex align-items-center">
+        <div class="d-inline-flex flex-column justify-content-center mr-3">
+            <span class="fw-300 fs-xs d-block opacity-50">
+                <small>TOTAL SUM</small>
+            </span>
+            <span class="fw-500 fs-xl d-block color-primary-500">
+                @Model.RequestTotals.ToString("#,##0.00")
+            </span>
+        </div>
+        <span class="sparklines hidden-lg-down" sparkType="bar" sparkBarColor="#886ab5" sparkHeight="32px" sparkBarWidth="5px" values="3,4,3,6,7,3,3,6,2,6,4"></span>
+    </div>
+    <div class="subheader-block d-lg-flex align-items-center border-faded border-right-0 border-top-0 border-bottom-0 ml-3 pl-3">
+        <div class="d-inline-flex flex-column justify-content-center mr-3">
+            <span class="fw-300 fs-xs d-block opacity-50">
+                <small>APPROVED</small>
+            </span>
+            <span class="fw-500 fs-xl d-block color-success-500">
+                @Model.PaidCount.ToString("#,##0")
+            </span>
+        </div>
+        <span class="sparklines hidden-lg-down" sparkType="bar" sparkBarColor="#fe6bb0" sparkHeight="32px" sparkBarWidth="5px" values="1,4,3,6,5,3,9,6,5,9,7"></span>
+    </div>
+}*@
+<div class="row">
+    <div class="col-lg-12">
+        <div id="panel-2" class="panel">
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="row">
+                            <div class="col-12" style="height:600px">
+                                @(Html.DevExtreme().VectorMap()
+                                .ID("vector-map")
+                                .Bounds(new double[] { -180, 85, 180, -60 })
+                                .Layers(l => l.Add()
+                                .Name("areas")
+                                .DataSource(new JS("DevExpress.viz.map.sources.world"))
+                                .Palette(VizPalette.Violet)
+                                .ColorGroups(new double[] { 0, 5, 10, 20, 30, 100 })
+                                .ColorGroupingField("population")
+                                .Customize("vectorMap_areasLayer_customize"))
+                                .Legends(l => l.Add()
+                                .Source(s => s
+                                .Layer("areas")
+                                .Grouping("color"))
+                                .CustomizeText("vectorMap_areasLegend_customizeText"))
+                                .Tooltip(t => t
+                                .Enabled(true)
+                                .CustomizeTooltip("vectorMap_customizeTooltip"))
+                                )
+
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/content/populations.js"></script>
+
+<script type="text/javascript">
+    /* Activate smart panels */
+    $('#js-page-content').smartPanel();</script>
+
+
+<script>
+    function vectorMap_areasLayer_customize(elements) {
+        $.each(elements, function (_, element) {
+           element.attribute("population", populations[element.attribute("name")]);
+        });
+    }
+
+    function vectorMap_areasLegend_customizeText(arg) {
+        var text;
+        if (arg.index === 0) {
+            text = "< 5";
+        }
+        else if (arg.index === 5) {
+            text = "> 10%";
+        }
+        else {
+            text = arg.start + " to " + arg.end + "";
+        }
+        return text;
+    }
+
+    function vectorMap_customizeTooltip(arg) {
+        if (arg.attribute("population")) {
+            return { text: arg.attribute("name") + ": " + arg.attribute("population") + " Bethels" };
+        }
+    }
+</script>
+

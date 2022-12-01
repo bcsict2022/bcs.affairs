@@ -15,8 +15,15 @@ namespace infrastructure.bcs.affairs.Entities
 
     public partial class UserBands
     {
-        [Key] public int Id { get; set; }
+        [Key] 
         public string UserId { get; set; }
-        public int? BandId { get; set; }
+        public int BandId { get; set; }
+    }
+    public partial class UserBandLists
+    {
+        [Key]
+        public string UserId { get; set; }
+        public int BandId { get; set; }
+        public string BandName { get; set; }
     }
 }

@@ -2,90 +2,256 @@
 using app.bcs.affairs.Models;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
+using MaxMind.GeoIP2;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Reflection;
+using System.Security.Claims;
+using System.Web;
 
 namespace app.bcs.affairs.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private static HttpClient _httpClient;
-
-        private readonly IHttpClientFactory _clientFactory;
-
+        private readonly ILogger<HomeController> _logger;      
+        //private readonly IHttpClientFactory _clientFactory;
         private readonly IBCSAffairsService _affairsService;
-
-        //static HomeController()
-        //{
-        //    _httpClient = new HttpClient();
-        //}
-        //public HomeController(ILogger<HomeController> logger, IHttpClientFactory clientFactory)
-        //{
-        //    _logger = logger;
-        //    _clientFactory = clientFactory;
-        //}
-
-        public HomeController(ILogger<HomeController> logger, IBCSAffairsService  affairsService)
+        private IConfiguration _configuration;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        public HomeController(ILogger<HomeController> logger, IBCSAffairsService  affairsService, IWebHostEnvironment hostEnvironment, IConfiguration iConfig)
         {
             _logger = logger;
             _affairsService = affairsService;
+            _hostingEnvironment = hostEnvironment;
+            _configuration = iConfig;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            List<populations> countsList = new List<populations>();
+            var url = "Bethels/getBethelCounts";
+            var populations = await _affairsService.GetAllAsync<populations[]>(url);
+            if (populations.Count() > 0)
+            {
+                countsList = populations.ToList();
+
+
+                using (var writer = System.IO.File.CreateText(_hostingEnvironment.ContentRootPath + "\\wwwroot\\Content\\Populations.js"))
+                {
+                    writer.WriteLine("var populations = {");
+                    for (var i = 0; i < countsList.Count; i++)
+                    {
+                        writer.WriteLine(countsList[i].name);
+                    }
+                    writer.WriteLine("};");
+                }
+            }
             return View();
         }
-
-
-        public async Task<IActionResult> GetUsers(DataSourceLoadOptions loadOptions)
+       
+        [HttpPost]
+        public async Task<IActionResult> Login(vmLogin model)
         {
             try
             {
-                var url = "Users/getUser";
-                var response = await _affairsService.GetAllAsync<vmUserDetails[]>(url);
+                if (ModelState.IsValid)
+                {
+                    string login = null; // = _affairsService.CreateAsync);
 
-                var resultJson = JsonConvert.SerializeObject(response);
-                return Content((string)resultJson, "application/json");
+                    var response = await _affairsService.GetTypedObjectAsync<UserNameDetails>("Users/getLogin", model);
+                   
+
+                    if (response != null)
+                    {
+                        login = response.UserFullName;
+
+                        if (string.IsNullOrEmpty(login))
+                        {
+                            ViewBag.loginError = "The user login or password provided is incorrect.";
+                            return View("Index", model);
+                        }
+                        else if ((login == "Password Not matched"))
+                        {
+                            ViewBag.loginError = "Password Not matched";
+                            return View("Index", model);
+                        }
+                        else if (login == "User Status is INACTIVE")
+                        {
+                            ViewBag.loginError = "User Status is INACTIVE";
+                            return View("Index", model);
+                        }
+                        else if (login == "User Name not found")
+                        {
+                            ViewBag.loginError = "The user Name is incorrect.";
+                            return View("Index", model);
+                        }
+                        else
+                        {
+                            var loginTransaction = new vmLoginTransaction()
+                            {
+                                UserId = model.UserId,
+                                TransactionType = "Sign In"
+                            };
+                            var responseLogin = await _affairsService.CreateAsync("Users/addLoginTransaction", loginTransaction);
+
+
+                            HttpContext.Session.SetString("_userName", login);
+                            HttpContext.Session.SetString("_userId", model.UserId);
+
+
+                            vmLoginUserProfile userProfile = await _affairsService.GetAllByIdAsync<vmLoginUserProfile>("Users/getLoginUserProfile", model.UserId);
+                            if (userProfile != null)
+                            {
+                                if (!(userProfile.DepartmentId == null))
+                                {
+                                    HttpContext.Session.SetString("_departmentId", userProfile.DepartmentId);
+                                }
+                                else
+                                {
+                                    ViewBag.loginError = "No Unit/Command";
+                                }
+                                if (userProfile.BandId > 0)
+                                {
+                                    HttpContext.Session.SetInt32("_bandId", userProfile.BandId);
+                                }
+                                else
+                                {
+                                    ViewBag.loginError = "No Permission";
+                                }
+                            }
+
+                            var userDepartment = HttpContext.Session.GetString("_departmentId");
+                            if (!string.IsNullOrEmpty(userDepartment))
+                            {
+                                var claims = new List<Claim> { new Claim(ClaimTypes.Name, HttpContext.Session.GetString("_userId")) };
+                                var userIdentity = new ClaimsIdentity(claims, "login");
+                                ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+                                HttpContext.SignInAsync(principal);
+
+                                switch (userDepartment)
+                                {
+                                    case "Registration":
+                                        Console.WriteLine("Case 1");
+                                        break;
+                                    case "Tresury":
+                                        Console.WriteLine("Case 2");
+                                        break;
+                                    default:
+                                        return View("Index", model);
+                                        break;
+                                }
+                                return RedirectToAction("RegistrationDashBoards", "Home");
+                            }
+                            return View("Index", model);
+                        }
+                    }
+                  
+                }
             }
             catch (Exception ex)
             {
-                return Content("");
+                ViewBag.loginError = ex.Message;
             }
+            return View("Index", model);
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(vmPasswordChange vm)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var model = new PasswordChange()
+                    {
+                       UserId = HttpContext.Session.GetString("_userId"),
+                       FormerPassword = vm.FormerPassword,
+                       NewPassword = vm.NewPassword,
+                       ConfirmPassword = vm.ConfirmPassword
+                    };
+                    var response = await _affairsService.CreateAsync("Users/addmodifyUserPasswords", model);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ViewBag.loginError = "Invalid User Name and/or Password";
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.loginError = ex.Message.ToString();
+            }
+            return View(vm);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> SignOff()
+        {
+            HttpContext.Session.Clear();
+
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
 
-        [HttpGet]
-        public async Task<string> GetUserById(int id)
+
+        [Authorize]
+        public async Task<IActionResult> RegistrationDashBoards()
         {
-            var url = $"https://localhost:7177/api/{id}";
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("_userId")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {              
 
-            var response = await _httpClient.GetAsync(url);
-            string apiResponse = await response.Content.ReadAsStringAsync();
-            return apiResponse;
-        }
+                using (var reader = new DatabaseReader(_hostingEnvironment.ContentRootPath + "\\wwwroot\\Content\\GeoLite2-City.mmdb"))
+                {
 
-        [HttpGet] //best method 1
-        public async Task<string> GetUserById2(int id)
-        {
-            //var httpclient = _clientFactory.CreateClient();
-            //var url = $"https://localhost:7177/api/{id}";
-            var httpclient = _clientFactory.CreateClient("bcs_affairs_api");
-            
-            var url = $"{id}";
+                    var ipAddress = "169.159.107.241"; //HttpContext.Connection.RemoteIpAddress.ToString(); //"169.159.107.241"; //
 
-            var response = await httpclient.GetAsync(url);
-            string apiResponse = await response.Content.ReadAsStringAsync();
-            return apiResponse;
-        }
+                    var city = reader.City(ipAddress);
+                    var ip = new UserIPDetails
+                    {
+                        UserId = HttpContext.Session.GetString("_userId"),
+                        City = city.City.Name,
+                        IPAddress = ipAddress,
+                        AccuracyRadius = city.Location.AccuracyRadius.ToString(),
+                        StateName = city.MostSpecificSubdivision.Name,
+                        Continent = city.Continent.Name,
+                        Country = city.Country.Name,
+                        Latitude = city.Location.Latitude.ToString(),
+                        Longitude = city.Location.Longitude.ToString(),
+                        TimeZone = city.Location.TimeZone,
+                        RegisteredCountry = city.RegisteredCountry.Name,
+                        TransactionDate = DateTime.Today.Date
+                    };
 
+                    var response = await _affairsService.CreateAsync("Users/addUserIPDetails", ip);
+                }
 
-        [HttpGet] //best method 1*****
-        public async Task<string> GetUserById3(string id)
-        {
-            return await _affairsService.GetAsync(id);
+                //GetDashBoardAggregates dashBoardAggregates = _repoNav.GetDashBoardAggregates(HttpContext.Session.GetString("_CompanyId"));
+                //if (dashBoardAggregates != null)
+                //{
+                //    return View(dashBoardAggregates);
+                //}
+                return View();
+            }
+
         }
 
 

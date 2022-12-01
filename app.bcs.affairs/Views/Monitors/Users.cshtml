@@ -19,25 +19,30 @@
                         
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-3">
                                     @Html.LabelFor(m => m.UserId)
                                     @(Html.DevExtreme().TextBoxFor(m => m.UserId).Width("100%")
                                         .Placeholder("enter email address here ....")
                                         .ID("txtUserId"))
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3">
                                     @Html.LabelFor(m => m.LastName)
                                     @(Html.DevExtreme().TextBoxFor(m => m.LastName).Width("100%")
                                         .Placeholder("enter last name here ....")
                                         .ID("txtUserFullName"))
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3">
                                     @Html.LabelFor(m => m.FirstName)
                                     @(Html.DevExtreme().TextBoxFor(m => m.FirstName).Width("100%")
                                         .Placeholder("enter first name here ....")
-                                        .ID("txtEmail"))
-
-                                    
+                                        .ID("txtEmail"))                                    
+                                </div>
+                                <div class="col-3">
+                                    @Html.LabelFor(m => m.DepartmentId)
+                                    @(Html.DevExtreme().SelectBoxFor(m => m.DepartmentId).ID("dplDepartment").ValueExpr("Id")
+                                        .DisplayExpr("DepartmentDescription").Placeholder("select department from this list ......")
+                                        .Width("100%").SearchEnabled(true).SearchExpr("DepartmentDescription").SearchMode(DropDownSearchMode.Contains)
+                                        .DataSource(ds => ds.Mvc().Controller("Basetables").LoadAction("GetDepartments").Key("Id")))
                                 </div>
                             </div>
                         </div>
@@ -47,7 +52,8 @@
                             @*@Html.DevExtreme().TextBoxFor(m => m.CreatedUser).Value("mfonuwa@gmail.com").Visible(false)*@
                             @(Html.DevExtreme().Button().Text("Submit").Height(35)
                                 .Width("100%").UseSubmitBehavior(true)
-                                .Type(ButtonType.Default)
+                                .Type(ButtonType.Normal)
+                                .StylingMode(ButtonStylingMode.Outlined)
                                 .ID("button"))
                         </div>
                     </form>
@@ -59,24 +65,33 @@
         <div id="panel-1" class="panel">
             <div class="panel-container show">
                 <div class="panel-content">
-                    @(Html.DevExtreme().DataGrid().ID("usgrid").ShowColumnLines(false).ShowRowLines(true).RowAlternationEnabled(true).ShowBorders(true).SearchPanel(s => s.Visible(true).HighlightSearchText(true).HighlightSearchText(true).Width(500))
-                        .DataSource(ds => ds.Mvc().Controller("Monitors").Key("EmailAddress").LoadAction("GetUsers")
-                        .UpdateAction("EditUsers").DeleteAction("DeleteUsers"))
-                        .Columns(c =>
-                        {
-                            c.Add().DataField("EmailAddress").VisibleIndex(1).Width("20%").Caption("User Id").SortIndex(0).SortOrder(SortOrder.Asc).AllowEditing(false);
-                            c.Add().DataField("LastName").VisibleIndex(5).Width("18%").Caption("Last Name");
-                            c.Add().DataField("FirstName").VisibleIndex(5).Width("18%").Caption("First Name");
-                            c.Add().DataField("IsFirstLogin").VisibleIndex(5).Width("10%").Caption("First Login?");
-                            c.Add().DataField("UserStatus").VisibleIndex(5).Width("10%").Caption("Status");
-                            c.Add().DataField("CreatedUser").VisibleIndex(6).Width("10%").Caption("Transaction By").AllowEditing(false);
-                            c.Add().DataField("TransactionDate").Format("dd-MM-yyyy").DataType(GridColumnDataType.Date).VisibleIndex(7).Width("10%").AllowEditing(false);
-                        }).Editing(ed =>
-                        {
-                            ed.AllowUpdating(true);
-                            ed.Mode(GridEditMode.Popup);
-                            ed.AllowDeleting(true);
-                        }).Paging(p => p.Enabled(true).PageSize(15)).Width("100%").Pager(pg => pg.ShowInfo(true).ShowPageSizeSelector(true).ShowNavigationButtons(true)))
+                    @(
+                        Html.DevExtreme().DataGrid().ID("usgrid").ShowColumnLines(false).ShowRowLines(true).RowAlternationEnabled(true).ShowBorders(true).SearchPanel(s => s.Visible(true).HighlightSearchText(true).HighlightSearchText(true).Width(500))
+                            .DataSource(ds => ds.Mvc().Controller("Monitors").Key("EmailAddress").LoadAction("GetUsers")
+                            .UpdateAction("EditUsers").DeleteAction("DeleteUsers"))
+                            .Columns(c =>
+                            {
+                                c.Add().DataField("EmailAddress").VisibleIndex(1).Width("18%").Caption("User Id").SortIndex(0).SortOrder(SortOrder.Asc).AllowEditing(false);
+                                c.Add().DataField("LastName").VisibleIndex(5).Width("13%").Caption("Last Name");
+                                c.Add().DataField("FirstName").VisibleIndex(5).Width("15%").Caption("First Name");
+                                c.Add().DataField("DepartmentId").VisibleIndex(5)
+                                .Width("13%").Caption("Department")
+                                .Lookup(lookup => lookup
+                                .DataSource(d => d.Mvc().Controller("Basetables").Key("Id").LoadAction("GetDepartments"))
+                                .DisplayExpr("DepartmentDescription").ValueExpr("Id"));
+                                c.Add().DataField("IsFirstLogin").VisibleIndex(5).Width("10%").Caption("First Login?").AllowEditing(false);
+                                c.Add().DataField("UserStatus").VisibleIndex(5).Width("10%").Caption("Status").AllowEditing(false);
+                                c.Add().DataField("CreatedUser").VisibleIndex(6).Width("10%").Caption("Transaction By").AllowEditing(false);
+                                c.Add().DataField("TransactionDate").Format("dd-MM-yyyy").DataType(GridColumnDataType.Date).VisibleIndex(7).Width("10%").AllowEditing(false);
+                            }).Editing(ed =>
+                            {
+                                ed.AllowUpdating(true);
+                                ed.Mode(GridEditMode.Popup);
+                                ed.AllowDeleting(true);
+                                ed.Popup(p => p.Title("User Information").ShowTitle(true).Width(700).Height(500));                                
+                            })
+                            .Paging(p => p.Enabled(true).PageSize(15)).Width("100%").Pager(pg => pg.ShowInfo(true).ShowPageSizeSelector(true).ShowNavigationButtons(true))
+                        )
                 </div>
             </div>
         </div>

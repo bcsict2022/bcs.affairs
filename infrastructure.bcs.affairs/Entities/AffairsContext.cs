@@ -21,14 +21,19 @@ namespace infrastructure.bcs.affairs.Entities
         public DbSet<BethelTypes> BethelType { get; set; }
         public DbSet<Bethels> Bethel { get; set; }
         public DbSet<Countries> Country { get; set; }
+        public DbSet<Regions> Region { get; set; }
         public DbSet<Departments> Department { get; set; }
         public DbSet<MenuCommands> MenuCommand { get; set; }
         public DbSet<UserBands> UserBand { get; set; }
         public DbSet<Users> User { get; set; }
-
+        public DbSet<LoginTransactions> LoginTransaction { get; set; }
+        public DbSet<UserIPDetails> UserIPDetail { get; set; }
+        public DbSet<populations> population { get; set; }
 
         #region view
         public DbSet<BethelLists> BethelList { get; set; }
+        public DbSet<UserDepartments> UserDepartment { get; set; }
+        public DbSet<UserBandLists> UserBandList { get; set; }
         #endregion
 
 
@@ -63,20 +68,22 @@ namespace infrastructure.bcs.affairs.Entities
                 entity.ToTable("Bands", "Manager");
                 entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
             });
-            modelBuilder.Entity<UserBands>(entity =>
-            {
-                entity.ToTable("UserBands", "Manager");
-                entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
-            });
+            
             modelBuilder.Entity<MenuCommands>(entity =>
             {
                 entity.ToTable("MenuCommands", "Manager");
                 entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
             });
-            //modelBuilder.Entity<Roles>(entity => {
-            //    entity.ToTable("Roles", "Sapphire");
-            //    entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
-            //});
+            modelBuilder.Entity<LoginTransactions>(entity =>
+            {
+                entity.ToTable("LoginTransactions", "Manager");
+                entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
+            });
+            modelBuilder.Entity<UserIPDetails>(entity =>
+            {
+                entity.ToTable("UserIPDetails", "Manager");
+                entity.Property(e => e.Id).UseIdentityColumn(); entity.HasKey(o => o.Id);
+            });
 
             //modelBuilder.Entity<Companies>(entity => {
             //    entity.ToTable("Companies", "Sapphire");
@@ -96,12 +103,14 @@ namespace infrastructure.bcs.affairs.Entities
             modelBuilder.Entity<Countries>().ToTable("Countries", "Manager");
             modelBuilder.Entity<Bethels>().ToTable("Bethels", "Registration");
             modelBuilder.Entity<Users>().ToTable("Users", "Manager");
-            //modelBuilder.Entity<Users>().ToTable("Users", "Sapphire");
+            modelBuilder.Entity<UserBands>().ToTable("UserBands", "Manager");
+            modelBuilder.Entity<Regions>().ToTable("Regions", "Manager");
+            //modelBuilder.Entity<UserBandLists>().top("UserBandLists", "dbo");
 
             ////views
             modelBuilder.Entity<BethelLists>(entity => { entity.ToView("BethelLists", "Registration"); });
-            //modelBuilder.Entity<vwRequisitions>(entity => { entity.ToView("vwRequisitions", "Sapphire"); });
-
+            modelBuilder.Entity<UserDepartments>(entity => { entity.ToView("UserDepartments", "Manager"); });
+            modelBuilder.Entity<UserBandLists>(entity => { entity.ToView("UserBandLists", "Manager"); });
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

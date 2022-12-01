@@ -20,11 +20,11 @@ namespace infrastructure.bcs.affairs.Factories
         {
             _basedContext = basedContext;
         }
-        public async Task<bool> CreateProfileMenus(string menuGroup, string menuHeads, string menuLines)
+        public async Task<bool> CreateProfileMenus(ProfileMenus vm)//string menuGroup, string menuHeads, string menuLines
         {
             try
             {
-                int groupmenu = await _basedContext.Database.ExecuteSqlRawAsync("Manager.CreateBandMenuPermissions @BandId = {0},@MenuHeads = {1},@MenuLines = {2}", menuGroup, menuHeads, menuLines);
+                int groupmenu = await _basedContext.Database.ExecuteSqlRawAsync("Manager.CreateBandMenuPermissions @BandId = {0},@MenuHeads = {1},@MenuLines = {2}", vm.menuGroup, vm.menuHeads, vm.menuLines);
                 return true;
             }
             catch (Exception ex)

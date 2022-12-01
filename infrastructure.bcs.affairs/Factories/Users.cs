@@ -16,6 +16,7 @@ namespace infrastructure.bcs.affairs.Factories
     public class FactoryUsers : IUsers
     {
         private readonly AffairsContext _basedContext;
+        private UserNameDetails userName;
 
         public FactoryUsers(AffairsContext basedContext)
         {
@@ -60,7 +61,8 @@ namespace infrastructure.bcs.affairs.Factories
                   SecurityStamp = passwordSalt,
                   UserStatus =   true,
                   IsFirstLogin = false,
-                  CreatedUser = "", // vm.Createdby,
+                  CreatedUser = vm.CreatedUser,
+                  DepartmentId = vm.DepartmentId,
                   TransactionDate = DateTime.Today.Date
                 };
                 await _basedContext.User.AddAsync(user);
@@ -114,7 +116,7 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-        public async Task EditUserAsync(vmUserDetails vm)
+        public async Task EditUserAsync(vmEditUser vm)
         {
             try
             {
@@ -122,6 +124,7 @@ namespace infrastructure.bcs.affairs.Factories
               
                 user.FirstName = vm.FirstName;
                 user.LastName = vm.LastName;
+                user.DepartmentId = vm.DepartmentId;
            
                 await _basedContext.SaveChangesAsync();
             }
@@ -134,7 +137,7 @@ namespace infrastructure.bcs.affairs.Factories
         {
             try
             {
-                var lists = await _basedContext.User.Select(p => new vmUserDetails()
+                var lists = await _basedContext.UserDepartment.Select(p => new vmUserDetails()
                 {
                     EmailAddress = p.EmailAddress,
                     LastName = p.LastName,  
@@ -142,7 +145,8 @@ namespace infrastructure.bcs.affairs.Factories
                     IsFirstLogin = p.IsFirstLogin,
                     UserStatus = p.UserStatus,
                     CreatedUser = p.CreatedUser,
-                    TransactionDate = p.TransactionDate
+                    TransactionDate = p.TransactionDate, DepartmentDescription = p.DepartmentDescription,
+                    UserFullName = p.UserFullName, DepartmentId = p.DepartmentId
                 }).ToListAsync();
 
                 return lists;
@@ -152,13 +156,13 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-        public async Task<String> GetLogin(vmLogin vm)
+        public async Task<UserNameDetails> GetLogin(vmLogin vm)
         {
             try
             {
                 var user = await _basedContext.User.FindAsync(vm.UserId);
 
-
+                var userNameDetails = new UserNameDetails();
                 if (user != null)
                 {
                     if (user.IsFirstLogin == false)
@@ -166,11 +170,9 @@ namespace infrastructure.bcs.affairs.Factories
                         bool done = NewPassword(userId:vm.UserId, newPassword: vm.Password);
                         if (done == true)
                         {
-                            return user.EmailAddress;
-                        }
-                        else
-                        {
-                            return null;
+                            userNameDetails.UserFullName = user.FirstName + " " + user.LastName;
+
+                            return userNameDetails;
                         }
                     }
                     if (user.UserStatus == true)
@@ -181,28 +183,172 @@ namespace infrastructure.bcs.affairs.Factories
 
                         if (computeHash.SequenceEqual(user.PasswordHashed))
                         {
-                            return user.EmailAddress;
+                            userNameDetails.UserFullName = user.FirstName + " " + user.LastName;
+
+                            return userNameDetails;
                         }
                         else
                         {
-                            return "Password Not matched";
+                            userNameDetails.UserFullName = "Password Not matched";
+                            return userNameDetails;
                         }
-
                     }
                     else
                     {
-                        return "User Status is INACTIVE";
+                        userNameDetails.UserFullName = "User Status is INACTIVE";
+                        return userNameDetails;
                     }
                 }
                 else
                 {
-                    return "User Name not found";
+                    userNameDetails.UserFullName = "User Name not found";
+                    return userNameDetails;
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+        public async Task<bool> LoginTransactions(vmLoginTransaction vm)
+        {
+            try
+            {
+                var umodule = new LoginTransactions
+                {
+                    UserId = vm.UserId,
+                    TransactionType = vm.TransactionType,
+                    TransactionDate = DateTime.Today.Date,
+                    TransactionTime = DateTime.Now.ToLongTimeString(),
+                    TransactionTime1 = DateTime.Now.ToLocalTime()
+                };
+                await _basedContext.LoginTransaction.AddAsync(umodule);
+                await _basedContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw ex;
+            }
+        }
+        public async Task<vmLoginUserProfile> GetUserProfile(string id)
+        {
+            try
+            {
+                var userProfile = new vmLoginUserProfile();
+                var userDepartment = _basedContext.UserDepartment.Where(u => u.EmailAddress == id).FirstOrDefault();
+                if (userDepartment != null)
+                {
+                    userProfile.DepartmentId = userDepartment.DepartmentDescription;
+                }
+                else
+                {
+                    userProfile.DepartmentId = null;
+                    //userProfile.DepartmentId = "Registration";
+                }
+                var userGroup = await _basedContext.UserBandList.FindAsync(id);
+                if(userGroup != null)
+                {
+                    if (userGroup.BandId > 0)
+                    {
+                        userProfile.BandId = userGroup.BandId;
+                        userProfile.BandName = userGroup.BandName;
+                    }                    
+                }
+                else
+                {
+                    userProfile.BandId = 0;
+                    userProfile.BandName = "";
+                }
+                
+                userProfile.UserId = id;
+
+                return userProfile;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }       
+        }
+        public async Task<bool> CreateUserIPDetails(UserIPDetails vm)
+        {
+            try
+            {
+                var ipdetails = new UserIPDetails
+                {
+                    UserId = vm.UserId,
+                    IPAddress = vm.IPAddress,
+                    City = vm.City,
+                    AccuracyRadius = vm.AccuracyRadius,
+                    StateName = vm.StateName,
+                    Continent = vm.Continent,
+                    Country = vm.Country,
+                    Latitude = vm.Latitude,
+                    Longitude = vm.Longitude,
+                    TimeZone = vm.TimeZone,
+                    RegisteredCountry = vm.RegisteredCountry,
+                    TransactionDate = vm.TransactionDate
+                };
+                await _basedContext.UserIPDetail.AddAsync(ipdetails);
+                await _basedContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> EditUserPasswords(vmPasswordChange vm)
+        {
+            try
+            {
+                byte[] RegistryAccount = null;
+                           
+                var user = await _basedContext.User.FindAsync(vm.UserId); 
+
+                if (user != null)
+                {
+                    if (user.UserStatus == true)
+                    {
+                        RegistryAccount = user.SecurityStamp;
+                        if (RegistryAccount != null)
+                        {
+                            var h = new HMACSHA512(user.SecurityStamp);
+                            var computeHash = h.ComputeHash(Encoding.UTF8.GetBytes(vm.FormerPassword));
+
+
+                            if (computeHash.SequenceEqual(user.PasswordHashed))
+                            {
+                                CreateHashWithSalt(vm.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
+
+                                user.PasswordHashed = passwordHash;
+                                user.SecurityStamp = passwordSalt;
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return false;
         }
     }
 }

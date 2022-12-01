@@ -123,3 +123,26 @@ using (var httpClient = new HttpClient())
         //    }
         //    return message;
         //}
+
+
+        [HttpGet] //best method 1
+        public async Task<string> GetUserById2(int id)
+        {
+            //var httpclient = _clientFactory.CreateClient();
+            //var url = $"https://localhost:7177/api/{id}";
+            var httpclient = _clientFactory.CreateClient("bcs_affairs_api");
+            
+            var url = $"{id}";
+
+            var response = await httpclient.GetAsync(url);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+            return apiResponse;
+        }
+
+
+        [HttpGet] //best method 1*****
+        public async Task<string> GetUserById3(string id)
+        {
+            return await _affairsService.GetAsync(id);
+        }
+

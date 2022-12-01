@@ -1,0 +1,189 @@
+﻿@{
+    ViewData["Title"] = "Profile Permissions";
+    ViewData["PageName"] = "monitors_profilePermissions";
+    ViewData["Heading"] = "<i class='fal fa-shield-alt'></i> Monitors: <span class='fw-300'>Profile's Permissions</span>";
+    ViewData["Category1"] = "Monitors";
+    ViewData["PageIcon"] = "fa-shield-alt";
+}
+
+@section HeadBlock {
+
+}
+
+    <div class="row">
+        <div class="col-6">
+            <div class="col-xl-12">
+                <div id="panel-1" class="panel">
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <form id="PostForm">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            @Html.Label("Profile")
+                                            @(Html.DevExtreme().SelectBox().ID("dplProfile")
+                                            .ValueExpr("Id").DisplayExpr("Name").Placeholder("select profile description here ......")
+                                            .Width("100%").SearchEnabled(true).SearchExpr("Name")
+                                            .SearchMode(DropDownSearchMode.Contains)
+                                            .DataSource(ds => ds.Mvc().Controller("Monitors").LoadAction("GetProfiles").Key("Id"))
+                                            .OnValueChanged("refreshGrid"))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @(Html.DevExtreme().TreeView().ID("treeView")
+                                            .DataSource(ds => ds.Mvc().Controller("Monitors").LoadAction("GetMenuCommands"))
+                                            .DataStructure(TreeViewDataStructure.Plain).DisplayExpr("Title")
+                                            .ParentIdExpr("MenusId").KeyExpr("Id").ExpandedExpr("Expanded")
+                                            .Width(600).ShowCheckBoxesMode(TreeViewCheckBoxMode.SelectAll).SelectNodesRecursive(false))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @(Html.DevExtreme().Button().Text("Submit").Height(35)
+                                    .Width("100%").UseSubmitBehavior(true)
+                                    .Type(ButtonType.Normal).StylingMode(ButtonStylingMode.Outlined)
+                                    .ID("button"))
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        @(Html.DevExtreme().DataGrid().ID("usgrid").ShowColumnLines(false).ShowRowLines(true)
+                            .RowAlternationEnabled(true).ShowBorders(true)
+                            .DataSource(ds => ds.Mvc().Controller("Monitors").Key("Id").LoadAction("GetProfileMenuCommands")
+                            .LoadParams(new { id = new JS("getGroupId") }))
+                            .Columns(c =>
+                            {
+                                c.Add().DataField("Parent").VisibleIndex(1).GroupIndex(0);
+                                c.Add().DataField("Title").VisibleIndex(1).Width("100%").Caption("Menu");
+                            })
+                            .Grouping(g => { g.AutoExpandAll(false); }).Paging(p => p.Enabled(true).PageSize(15)).Width("100%")
+                            .Pager(pg => pg.ShowInfo(true).ShowNavigationButtons(true).ShowPageSizeSelector(true))
+
+                            )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="loader"></div>
+<script src="~/js/jquery.unobtrusive-ajax.js"></script>
+<script type="text/javascript">
+
+    function refreshGrid(data) {
+        $("#usgrid").dxDataGrid("instance").refresh();
+    }
+
+    function getGroupId() {
+        var accId = $("#dplProfile").dxSelectBox("instance").option("value");
+        if (accId === null)
+            accId = "";
+        return accId;
+    }
+
+    $(function () {
+        $("#PostForm").on('submit', function (e) {
+            $('#loader').show();
+            e.preventDefault();
+
+            var checkedNodes = [];
+
+            var nodes = $('#treeView').dxTreeView('instance').getNodes();
+
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].selected) {
+                    checkedNodes.push(nodes[i].key);
+                }
+            }
+            //alert(checkedNodes);
+
+            var selectedNodeItems = [];
+            for (var k = 0; k < nodes.length; k++) {
+                if (nodes[k].selected) {
+                    //alert(nodes[i].key);
+                    for (var j = 0; j < nodes[k].items.length; j++) {
+                        if (nodes[k].items[j].selected) {
+                            selectedNodeItems.push(nodes[k].items[j].key);
+                            //alert( nodes[i].items[j].key);
+                        }
+                    }
+
+                }
+            }
+
+            //alert(selectedNodeItems);
+
+
+            var accId = $("#dplProfile").dxSelectBox("instance").option("value");
+
+            //alert(accId);
+
+            $.post('@Url.Action("ProfilePermissions", "Monitors")?menuGroup=' + accId + '&menuHeads=' + checkedNodes + '&menuLines=' + selectedNodeItems)
+
+                .done(function (response, status, jqxhr) {
+
+                    if (response.mstatus === "success") {
+                        DevExpress.ui.notify({
+                            message: "Profile Permission submitted successfully",
+                            type: "success",
+                            displayTime: 6000,
+                            height: 55,
+                            position: "top"
+                        });
+                    } else {
+                        DevExpress.ui.notify({
+                            message: response.mstatus,
+                            type: "error",
+                            displayTime: 6000,
+                            height: 55,
+                            position: "top"
+                        });
+                    }
+
+
+
+
+                    reloadData();
+
+                    $("#treeView").dxTreeView("instance").unselectAll();
+                    $("#dplProfile").dxSelectBox("instance").reset();
+
+                    $('#loader').hide();
+                })
+                .fail(function (response, status, error) {
+                    DevExpress.ui.notify({
+                        message: response.mstatus,
+                        type: "error",
+                        displayTime: 6000,
+                        height: 55,
+                        position: "top"
+                    });
+                    e.preventDefault();
+                    $('#loader').hide();
+                });
+        });
+    });
+
+
+
+    function reloadData() {
+        $("#usgrid").dxDataGrid("getDataSource").reload();
+    }
+</script>
+
+
+
+
+

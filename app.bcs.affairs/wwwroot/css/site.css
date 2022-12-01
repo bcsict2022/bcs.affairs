@@ -208,4 +208,8 @@ pre.prettyprint {
         border-left: 3px solid var(--danger);
     }
 
+#vector-map {
+    height: 440px;
+}
+
 /* Enter custom CSS rules for your application here */

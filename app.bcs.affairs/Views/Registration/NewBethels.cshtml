@@ -1,0 +1,190 @@
+﻿@model app.bcs.affairs.Models.vmBethel
+
+@{
+    ViewData["Title"] = "New Bethels";
+    ViewData["PageName"] = "registration_bethels";
+    ViewData["Heading"] = "<i class='fal fa-file-invoice'></i> Registration: <span class='fw-300'>New Bethel</span>";
+    ViewData["Category1"] = "Registration";
+    ViewData["PageIcon"] = "fal fa-file-invoice";
+}
+@section HeadBlock {
+
+}
+    <div class="alert alert-primary alert-dismissible">
+        <div class="row">
+            <div class="col-11">
+            </div>
+            <div class="col-1 text-right">
+                <a href="@Url.Action("Bethels", "Registration")" class="btn btn-outline-primary btn-outline- btn-icon rounded-circle">
+                    <i class="fal fa-long-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <form id="PostForm">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.BethelTypeId)
+                                        @(Html.DevExtreme().SelectBoxFor(m => m.BethelTypeId).ID("dplBethelTypes").ValueExpr("Id")
+                                        .DisplayExpr("BethelTypeDescription").Placeholder("select bethel type from this list ......")
+                                        .Width("100%").SearchEnabled(true).SearchExpr("BethelTypeDescription").SearchMode(DropDownSearchMode.Contains)
+                                        .DataSource(ds => ds.Mvc().Controller("Basetables").LoadAction("GetBethelTypes").Key("Id")))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.BethelDescription)
+                                        @(Html.DevExtreme().TextBoxFor(m => m.BethelDescription).Width("100%")
+                                        .Placeholder("enter bethel name here ....").ID("txtBethelDescription"))
+                                    </div>
+                                    <div class="col-6">
+                                        @*@Html.LabelFor(m => m.BeneficiaryAddress)
+                                        @(Html.DevExtreme().AutocompleteFor(m => m.BeneficiaryAddress).Width("100%")
+                                            .DataSource(ds => ds.Mvc().Controller("TF1").LoadAction("GetBeneficiaryAddress"))
+                                            .MinSearchLength(2).SearchTimeout(500).Placeholder("type two letters to search...")
+                                            .ID("txtBeneficiaryAddress"))*@
+                                    </div>
+                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-6">
+                                        @Html.LabelFor(m => m.Address)
+                                        @(Html.DevExtreme().TextBoxFor(m => m.Address).Width("100%")
+                                        .Placeholder("enter address here ....").ID("txtAddress"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.Address2)
+                                        @(Html.DevExtreme().TextBoxFor(m => m.Address2).Width("100%")
+                                        .Placeholder("enter address (optional) here ....").ID("txtAddress2"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.CountryId)
+                                    @(Html.DevExtreme().SelectBoxFor(m => m.CountryId).ID("dplCountryId").ValueExpr("Id")
+                                        .DisplayExpr("CountryDescription").Placeholder("select country from this list ......")
+                                        .Width("100%").SearchEnabled(true).SearchExpr("CountryDescription").SearchMode(DropDownSearchMode.Contains)
+                                        .DataSource(ds => ds.Mvc().Controller("Basetables").LoadAction("GetCountries").Key("Id")))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.StatesProvince)
+                                    @(Html.DevExtreme().AutocompleteFor(m => m.StatesProvince).Width("100%")
+                                        .DataSource(ds => ds.Mvc().Controller("Registration").LoadAction("GetBethelStatesProvinces"))
+                                        .MinSearchLength(2).SearchTimeout(500).Placeholder("type two letters to search...")
+                                        .ID("txtStatesProvince"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.LocalCouncil)
+                                    @(Html.DevExtreme().AutocompleteFor(m => m.LocalCouncil).Width("100%")
+                                        .DataSource(ds => ds.Mvc().Controller("Registration").LoadAction("GetBethelLocalCouncils"))
+                                        .MinSearchLength(2).SearchTimeout(500).Placeholder("type two letters to search...")
+                                        .ID("txtLocalCouncil"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.Town)
+                                    @(Html.DevExtreme().AutocompleteFor(m => m.Town).Width("100%")
+                                        .DataSource(ds => ds.Mvc().Controller("Registration").LoadAction("GetBethelTowns"))
+                                        .MinSearchLength(2).SearchTimeout(500).Placeholder("type two letters to search...")
+                                        .ID("txtTown"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.ZipPostCode)
+                                    @(Html.DevExtreme().TextBoxFor(m => m.ZipPostCode).Width("100%")
+                                        .Placeholder("enter address (optional) here ....").ID("txtZipPostCode"))
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @(Html.DevExtreme().Button().Text("Submit").Height(35)
+                                    .Width("100%").UseSubmitBehavior(true)
+                                    .Type(ButtonType.Normal)
+                                    .StylingMode(ButtonStylingMode.Outlined)
+                                    .ID("button"))
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loader"></div>
+<script type="text/javascript">
+    $(function () {
+        $("#PostForm").on('submit', function (e) {
+            $('#loader').show();
+            e.preventDefault();
+
+            setTimeout(() => {
+                var dataToPost = $(this).serialize();
+
+                $.post('@Url.Action("NewVouchers", "TF1")', dataToPost)
+
+                    .done(function (response, status, jqxhr) {
+
+                        if (response.mstatus === "success") {
+                            DevExpress.ui.notify({
+                                message: "New Vouchers submitted successfully",
+                                type: "success",
+                                displayTime: 6000,
+                                height: 55,
+                                position: "top"
+                            });
+                        } else {
+                            DevExpress.ui.notify({
+                                message: response.mstatus,
+                                type: "error",
+                                displayTime: 6000,
+                                height: 55,
+                                position: "top"
+                            });
+                        }
+
+
+                        $("#txtDescriptions").dxTextBox("instance").option('value', '');
+                        $("#txtBeneficiary").dxAutocomplete("instance").option('value', '');
+                        $("#txtBeneficiaryAddress").dxAutocomplete("instance").option('value', '');
+                        $("#txtAuthority").dxTextBox("instance").option('value', '');
+                        $("#txtAmount").dxNumberBox("instance").option('value', 0);
+
+                        $("#txtAuthDate").dxDateBox("instance").reset();
+                        $("#dplVoucherDate").dxDateBox("instance").reset();
+
+                        //reloadData();
+
+                        $('#loader').hide();
+                    })
+                    .fail(function (response, status, error) {
+                        DevExpress.ui.notify({
+                            message: response.mstatus,
+                            type: "error",
+                            displayTime: 6000,
+                            height: 55,
+                            position: "top"
+                        });
+                        e.preventDefault();
+                        $('#loader').hide();
+                    });
+
+            });
+        });
+    });
+
+    function reloadData() {
+        $("#usgrid").dxDataGrid("getDataSource").reload();
+    }
+
+
+    function refreshGrid(data) {
+        $("#usgrid").dxDataGrid("instance").refresh();
+    }
+</script>
+
+

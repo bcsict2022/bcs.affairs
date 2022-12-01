@@ -17,10 +17,10 @@ namespace app.bcs.affairs.APIServices
         Task<string> GetAsync(string id);
         Task<T> GetAllAsync<T>(string url);
         Task<T> GetAllByIdAsync<T>(string url, string id);
-
         Task<HttpResponseMessage> EditAsync<T>(string url, object requestData);
         Task<HttpResponseMessage> DeleteAsync(string url, string id);
         Task<HttpResponseMessage> CreateAsync(string url, object requestData);
+        Task<T> GetTypedObjectAsync<T>(string url, object requestData);
     }
 
    
@@ -68,8 +68,9 @@ namespace app.bcs.affairs.APIServices
             try
             {
                 var result = default(T);
-                string apiURL = $"{url}+{id}";
-             
+                //string apiURL = $"{url}+{id}";
+                string apiURL = $"{url}{id}";
+
                 var response = await _httpClient.GetAsync(apiURL);
                 var content = response.Content == null
                                    ? null
@@ -104,7 +105,6 @@ namespace app.bcs.affairs.APIServices
                 throw ex;
             }
         }
-
         public async Task<HttpResponseMessage> EditAsync<T>(string url, object requestData)
         {
             try
@@ -121,7 +121,6 @@ namespace app.bcs.affairs.APIServices
                 throw ex;
             }
         }
-
         public async Task<HttpResponseMessage> DeleteAsync(string url, string id)
         {
             try
@@ -138,5 +137,33 @@ namespace app.bcs.affairs.APIServices
             }
         }
 
+        public async Task<T> GetTypedObjectAsync<T>(string url, object requestData)
+        {
+            try
+            {
+                var result = default(T);
+               
+                string apiURL = $"{url}";
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+
+                using (var response = await _httpClient.PostAsync(apiURL, content))
+                {
+                    var returnedcontent = response.Content == null
+                                   ? null
+                                   : await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        result = JsonConvert.DeserializeObject<T>(returnedcontent);
+                    }
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

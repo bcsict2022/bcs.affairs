@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "rwXUjbqdIst9qd6Q4wsql6axFNBCs3/K0b8A4Obd1n4=",
+  "Hash": "pWGh+0W+v9XUU2ZOwnN7G6kcPriUv/4XAhkcDuP/Uuk=",
   "Source": "app.bcs.affairs",
   "BasePath": "_content/app.bcs.affairs",
   "Mode": "Default",
@@ -85,6 +85,23 @@
       "OriginalItemSpec": "wwwroot\\content\\license.key"
     },
     {
+      "Identity": "C:\\Users\\mfonu\\OneDrive\\Source\\bcs.affairs\\app.bcs.affairs\\wwwroot\\content\\Populations.js",
+      "SourceId": "app.bcs.affairs",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\mfonu\\OneDrive\\Source\\bcs.affairs\\app.bcs.affairs\\wwwroot\\",
+      "BasePath": "_content/app.bcs.affairs",
+      "RelativePath": "content/Populations.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\content\\Populations.js"
+    },
+    {
       "Identity": "C:\\Users\\mfonu\\OneDrive\\Source\\bcs.affairs\\app.bcs.affairs\\wwwroot\\css\\app.bundle.css",
       "SourceId": "app.bcs.affairs",
       "SourceType": "Discovered",
@@ -117,6 +134,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\app.bundle-rtl.css"
+    },
+    {
+      "Identity": "C:\\Users\\mfonu\\OneDrive\\Source\\bcs.affairs\\app.bcs.affairs\\wwwroot\\css\\DecexStyleSheet.css",
+      "SourceId": "app.bcs.affairs",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\mfonu\\OneDrive\\Source\\bcs.affairs\\app.bcs.affairs\\wwwroot\\",
+      "BasePath": "_content/app.bcs.affairs",
+      "RelativePath": "css/DecexStyleSheet.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\DecexStyleSheet.css"
     },
     {
       "Identity": "C:\\Users\\mfonu\\OneDrive\\Source\\bcs.affairs\\app.bcs.affairs\\wwwroot\\css\\devextreme\\bootstrap.css",

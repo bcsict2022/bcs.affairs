@@ -30,14 +30,28 @@ namespace api.bcs.affairs.Controllers
             }
 
         }
-       
         [HttpGet]
-        [Route("getBethels{id}")]
-        public async Task<IActionResult> GetBethels(string countryId)
+        [Route("getBethelCounts")]
+        public async Task<IActionResult> GetBethelCounts()
         {
             try
             {
-                List<BethelLists> result = await _repo.GetBethelsAsync(countryId);
+                List<populations> result = await _repo.GetBethelCountsAsync();
+                return Ok(result); 
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+
+        }
+        [HttpGet]
+        [Route("getBethelsInCountry{id}")]
+        public async Task<IActionResult> GetBethelsInCountry(string id)
+        {
+            try
+            {
+                List<BethelLists> result = await _repo.GetBethelsInCountryAsync(id);
                 return Ok(result); //result
             }
             catch (Exception)
@@ -109,6 +123,52 @@ namespace api.bcs.affairs.Controllers
                 var mmmm = e.Message.ToString();
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
             }
+        }
+
+        [HttpGet]
+        [Route("getBethelStatesProvinces")]
+        public async Task<IActionResult> GetBethelStatesProvinces()
+        {
+            try
+            {
+                List<BethelDistinctLists> result = await _repo.GetBethelStatesProvince();
+                return Ok(result); //result
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+
+        }
+        [HttpGet]
+        [Route("getBethelLocalCouncils")]
+        public async Task<IActionResult> GetBethelLocalCouncils()
+        {
+            try
+            {
+                List<BethelDistinctLists> result = await _repo.GetBethelLocalCouncil();
+                return Ok(result); //result
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+
+        }
+        [HttpGet]
+        [Route("getBethelTowns")]
+        public async Task<IActionResult> GetBethelTown()
+        {
+            try
+            {
+                List<BethelDistinctLists> result = await _repo.GetBethelTown();
+                return Ok(result); //result
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failed");
+            }
+
         }
     }
 }
