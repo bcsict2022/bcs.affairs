@@ -1,35 +1,76 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace app.bcs.affairs.Models
 {
     public partial class vmBethel
     {
-        [Required(ErrorMessage = "Bethel Type is required")]
+        [Required(ErrorMessage = "Bethel Type is required"), DisplayName("Bethel Type")]
         public int BethelTypeId { get; set; }
 
-        [Required(ErrorMessage = "Bethel Description is required")]
+        [Required(ErrorMessage = "Bethel Description is required"), DisplayName("Bethel")]
         public string BethelDescription { get; set; }
 
-        [Required(ErrorMessage = "Address is required")]
+        [Required(ErrorMessage = "Address is required"), DisplayName("Address")]
         public string Address { get; set; }
 
+        [DisplayName("Address - Optional")]
         public string Address2 { get; set; }
 
-        [Required(ErrorMessage = "Country is required")]
+        [Required(ErrorMessage = "Country is required"), DisplayName("Country")]
         public string CountryId { get; set; }
 
-        [Required(ErrorMessage = "State/Province is required")]
+        [Required(ErrorMessage = "State/Province is required"), DisplayName("State/Province")]
         public string StatesProvince { get; set; }
 
-        [Required(ErrorMessage = "Local Council is required")]
+        [Required(ErrorMessage = "Local Council is required"), DisplayName("Local Council")]
         public string LocalCouncil { get; set; }
 
+        [DisplayName("Zip or Post Code")] 
         public string ZipPostCode { get; set; }
 
-        [Required(ErrorMessage = "BcsZone is required")]
+        [ DisplayName("Bcs Zone")]
         public string BcsZone { get; set; }
 
-        [Required(ErrorMessage = "Town is required")]
+        [Required(ErrorMessage = "Town is required"), DisplayName("Town")]
+        public string Town { get; set; }
+
+        [Required(ErrorMessage = "User Name is required"), StringLength(50)]
+        public string UserId { get; set; }
+    }
+    public partial class vmBethelEdit
+    {
+        [Required(ErrorMessage = "Bethel Type is required")] 
+        public string Id { get; set; }
+
+        [Required(ErrorMessage = "Bethel Type is required"), DisplayName("Bethel Type")]
+        public int BethelTypeId { get; set; }
+
+        [Required(ErrorMessage = "Bethel Description is required"), DisplayName("Bethel")]
+        public string BethelDescription { get; set; }
+
+        [Required(ErrorMessage = "Address is required"), DisplayName("Address")]
+        public string Address { get; set; }
+
+        [DisplayName("Address - Optional")]
+        public string Address2 { get; set; }
+    
+        [Required(ErrorMessage = "Country is required"), DisplayName("Country")]
+        public string CountryId { get; set; }
+
+        [Required(ErrorMessage = "State/Province is required"), DisplayName("State/Province")]
+        public string StatesProvince { get; set; }
+
+        [Required(ErrorMessage = "Local Council is required"), DisplayName("Local Council")]
+        public string LocalCouncil { get; set; }
+
+        [DisplayName("Zip or Post Code")]
+        public string ZipPostCode { get; set; }
+
+        [DisplayName("Bcs Zone")]
+        public string BcsZone { get; set; }
+
+        [Required(ErrorMessage = "Town is required"), DisplayName("Town")]
         public string Town { get; set; }
 
         [Required(ErrorMessage = "User Name is required"), StringLength(50)]

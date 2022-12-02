@@ -1,0 +1,138 @@
+﻿@model app.bcs.affairs.Models.vmBethelEdit
+
+@{
+    ViewData["Title"] = "New Bethels";
+    ViewData["PageName"] = "registration_bethels";
+    ViewData["Heading"] = "<i class='fal fa-file-invoice'></i> Registration: <span class='fw-300'>Edit Bethel</span>";
+    ViewData["Category1"] = "Registration";
+    ViewData["PageIcon"] = "fal fa-file-invoice";
+}
+@section HeadBlock {
+
+}
+    <div class="alert alert-primary alert-dismissible">
+        <div class="row">
+            <div class="col-11">
+            </div>
+            <div class="col-1 text-right">
+                <a href="@Url.Action("Bethels", "Registration")" class="btn btn-outline-primary btn-icon rounded-circle">
+                    <i class="fal fa-long-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-container show">
+                    <div class="panel-content">
+                    @using (Html.BeginForm())
+                    {
+                        <form id="PostForm">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.BethelTypeId)
+                                        @(Html.DevExtreme().SelectBoxFor(m => m.BethelTypeId).ID("dplBethelTypes").ValueExpr("Id")
+                                            .DisplayExpr("BethelTypeDescription").Placeholder("select bethel type from this list ......")
+                                            .Width("100%").SearchEnabled(true).SearchExpr("BethelTypeDescription").SearchMode(DropDownSearchMode.Contains)
+                                            .DataSource(ds => ds.Mvc().Controller("Basetables").LoadAction("GetBethelTypes").Key("Id")))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.BethelDescription)
+                                        @(Html.DevExtreme().TextBoxFor(m => m.BethelDescription).Width("100%")
+                                            .Placeholder("enter bethel name here ....").ID("txtBethelDescription"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.BcsZone)
+                                        @(Html.DevExtreme().TextBoxFor(m => m.BcsZone).Width("100%")
+                                            .Value("None")
+                                            .Placeholder("enter zone here ....").ID("txtBcsZone"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.HiddenFor(m => m.Id, new { id = "vId" })
+                                        @(Html.DevExtreme().TextBoxFor(m => m.UserId)
+                                        .Value(@Context.Session.GetString("_userId"))
+                                        .Visible(false))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-6">
+                                        @Html.LabelFor(m => m.Address)
+                                        @(Html.DevExtreme().TextBoxFor(m => m.Address).Width("100%")
+                                            .Placeholder("enter address here ....").ID("txtAddress"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.Address2)
+                                        @(Html.DevExtreme().TextBoxFor(m => m.Address2).Width("100%")
+                                            .Placeholder("enter address (optional) here ....").ID("txtAddress2"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.CountryId)
+                                        @(Html.DevExtreme().SelectBoxFor(m => m.CountryId).ID("dplCountryId").ValueExpr("Id")
+                                            .DisplayExpr("CountryDescription").Placeholder("select country from this list ......")
+                                            .Width("100%").SearchEnabled(true).SearchExpr("CountryDescription").SearchMode(DropDownSearchMode.Contains)
+                                            .DataSource(ds => ds.Mvc().Controller("Basetables").LoadAction("GetCountries").Key("Id")))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.StatesProvince)
+                                        @(Html.DevExtreme().AutocompleteFor(m => m.StatesProvince).Width("100%")
+                                            .DataSource(ds => ds.Mvc().Controller("Registration").LoadAction("GetBethelStatesProvinces"))
+                                            .MinSearchLength(2).SearchTimeout(500).Placeholder("type two letters to search...")
+                                            .ID("txtStatesProvince"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.LocalCouncil)
+                                        @(Html.DevExtreme().AutocompleteFor(m => m.LocalCouncil).Width("100%")
+                                            .DataSource(ds => ds.Mvc().Controller("Registration").LoadAction("GetBethelLocalCouncils"))
+                                            .MinSearchLength(2).SearchTimeout(500).Placeholder("type two letters to search...")
+                                            .ID("txtLocalCouncil"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.Town)
+                                        @(Html.DevExtreme().AutocompleteFor(m => m.Town).Width("100%")
+                                            .DataSource(ds => ds.Mvc().Controller("Registration").LoadAction("GetBethelTowns"))
+                                            .MinSearchLength(2).SearchTimeout(500).Placeholder("type two letters to search...")
+                                            .ID("txtTown"))
+                                    </div>
+                                    <div class="col-3">
+                                        @Html.LabelFor(m => m.ZipPostCode)
+                                        @(Html.DevExtreme().TextBoxFor(m => m.ZipPostCode).Width("100%")
+                                            .Placeholder("enter address (optional) here ....").ID("txtZipPostCode"))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @(Html.DevExtreme().Button().Text("Submit").Height(35)
+                                    .Width("100%").UseSubmitBehavior(true)
+                                    .Type(ButtonType.Normal)
+                                    .StylingMode(ButtonStylingMode.Outlined)
+                                    .ID("button"))
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loader"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#button").click(function () {
+            $("form").attr("action", "/Registration/EditBethel");
+        });
+        $("#btnPrint").click(function () {
+            var param = $("#vId").val();
+            var url = '@Url.Action("TFVouchers", "Presentations", new { id = "__param__" })';
+            window.location.href = url.replace('__param__', encodeURIComponent(param));
+        });
+    });
+</script>

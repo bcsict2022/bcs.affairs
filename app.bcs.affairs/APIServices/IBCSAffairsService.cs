@@ -125,7 +125,7 @@ namespace app.bcs.affairs.APIServices
         {
             try
             {
-                string apiURL = $"{url}+{id}";
+                string apiURL = $"{url}{id}";
                 using (var response = await _httpClient.DeleteAsync(apiURL))
                 {
                     return response;

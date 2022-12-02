@@ -1,5 +1,6 @@
 ﻿using app.bcs.affairs.APIServices;
 using app.bcs.affairs.Models;
+using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
@@ -27,8 +28,8 @@ namespace app.bcs.affairs.Controllers
             {
                 var url = "ManagerTables/getCountries";
                 var response = await _affairsService.GetAllAsync<Countries[]>(url);
-
-                var resultJson = JsonConvert.SerializeObject(response);
+                var result = DataSourceLoader.Load(response, loadOptions);
+                var resultJson = JsonConvert.SerializeObject(result);
                 return Content((string)resultJson, "application/json");
             }
             catch (Exception ex)

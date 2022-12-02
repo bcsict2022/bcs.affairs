@@ -50,11 +50,28 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-        public async Task EditBethelAsync(Bethels vm)
+        public async Task EditBethelAsync(vmBethelEdit vm)
         {
             try
             {
-                _basedContext.Entry(vm).State = EntityState.Modified;
+                var bethel = _basedContext.Bethel.Find(vm.Id);
+                if(bethel == null)
+                {
+                    return;
+                }
+                bethel.BethelTypeId = vm.BethelTypeId;
+                bethel.BethelDescription = vm.BethelDescription;
+                bethel.Address = vm.Address;
+                bethel.Address2 = vm.Address2;
+                bethel.CountryId = vm.CountryId;
+                bethel.StatesProvince = vm.StatesProvince;
+                bethel.LocalCouncil = vm.LocalCouncil;
+                bethel.ZipPostCode = vm.ZipPostCode;
+                bethel.BcsZone = vm.BcsZone;
+                bethel.Town = vm.Town;
+                bethel.UserId = vm.UserId;
+                bethel.TransactionDate = DateTime.Today;
+
                 await _basedContext.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -76,11 +93,26 @@ namespace infrastructure.bcs.affairs.Factories
             }
         }
 
-        public async Task<BethelLists> GetBethelDetailsAsync(string id)
+        public async Task<vmBethelEdit> GetBethelDetailsAsync(string id)
         {
             try
             {
-                var lists = await _basedContext.BethelList.ToListAsync();
+                var lists = await _basedContext.BethelList.Where(w=>w.Id == id)
+                    .Select((p) => new vmBethelEdit()
+                    {
+                        Id = p.Id,
+                        BethelDescription = p.BethelDescription,
+                        BethelTypeId = p.BethelTypeId,
+                        Address = p.Address,
+                        Address2 = p.Address2,
+                        CountryId = p.CountryId,
+                        StatesProvince = p.StatesProvince,
+                        LocalCouncil = p.LocalCouncil,
+                        ZipPostCode = p.ZipPostCode,
+                        BcsZone=p.BcsZone,
+                        Town=p.Town,
+                        UserId=p.UserId
+                    }).ToListAsync();
                 return lists.FirstOrDefault();
             }
             catch (Exception ex)

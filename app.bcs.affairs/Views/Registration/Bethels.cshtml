@@ -15,7 +15,7 @@
             </div>
             <div class="col-1 text-right">
                 <a href="@Url.Action("NewBethels", "Registration")" class="btn btn-outline-primary btn-icon rounded-circle">
-                    <i class="fal fa-long-arrow-left"></i>
+                    <i class="fal fa-plus"></i>
                 </a>
             </div>
         </div>
@@ -37,6 +37,9 @@
                             c.Add().DataField("StatesProvince").VisibleIndex(3).Width("13%").Caption("State");
                             c.Add().DataField("CountryDescription").VisibleIndex(3).Width("10%").Caption("Country");
                             c.Add().DataField("UserId").VisibleIndex(6).Width("15%").Caption("Transaction By");
+                        }).Editing(ed =>
+                        {
+                            ed.AllowDeleting(true);
                         }).Paging(p => p.Enabled(true).PageSize(10)).Width("100%").Pager(pg => pg.ShowInfo(true).ShowPageSizeSelector(true).ShowNavigationButtons(true))
                         .Selection(s => s.Mode(SelectionMode.Single)).HoverStateEnabled(true).OnSelectionChanged("selection_changed"))
                 </div>
@@ -53,7 +56,7 @@
         var data = selectedItems.selectedRowsData[0];
         if (data) {
           var param = data.Id;
-            var url = '@Url.Action("PaymentVouchers", "Registration", new {id = "__param__"})';
+            var url = '@Url.Action("EditBethels", "Registration", new {id = "__param__"})';
           window.location.href = url.replace('__param__', encodeURIComponent(param));
         }
     }

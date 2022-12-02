@@ -14,8 +14,8 @@ namespace infrastructure.bcs.affairs.Repositories
         Task<bool> CreateBethelAsync(vmBethel vm);
         Task<List<BethelLists>> GetBethelsAsync();
         Task<List<BethelLists>> GetBethelsInCountryAsync(string countryId);
-        Task<BethelLists> GetBethelDetailsAsync(string id);
-        Task EditBethelAsync(Bethels vm);
+        Task<vmBethelEdit> GetBethelDetailsAsync(string id);
+        Task EditBethelAsync(vmBethelEdit vm);
         Task DeleteBethelAsync(string id);
 
         Task<List<BethelDistinctLists>> GetBethelStatesProvince();

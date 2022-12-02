@@ -133,7 +133,6 @@ namespace app.bcs.affairs.Controllers
         {
             return View();
         }
-
         public async Task<IActionResult> GetProfiles(DataSourceLoadOptions loadOptions)
         {
             try
@@ -339,7 +338,6 @@ namespace app.bcs.affairs.Controllers
                 return Json(new { mstatus = ex.Message.ToString() });
             }
         }
-
         [HttpPost]
         public async Task<IActionResult> UsersProfile(vmUserBand model)
         {

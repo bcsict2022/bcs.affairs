@@ -132,18 +132,18 @@ namespace infrastructure.bcs.affairs.Factories
                 throw ex;
             }
         }
-        public async Task<List<Countries>> GetCountriesInRegionAsync(string id)
-        {
-            try
-            {
-                var list = await _basedContext.Country.Where((w) => w.RegionId == id).ToListAsync();
-                return list;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //public async Task<List<Countries>> GetCountriesInRegionAsync(string id)
+        //{
+        //    try
+        //    {
+        //        var list = await _basedContext.Country.Where((w) => w.RegionId == id).ToListAsync();
+        //        return list;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
         public async Task<List<Departments>> GetDepartmentsAsync()
         {
             try

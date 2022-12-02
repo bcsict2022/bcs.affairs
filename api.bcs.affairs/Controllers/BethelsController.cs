@@ -67,7 +67,7 @@ namespace api.bcs.affairs.Controllers
         {
             try
             {
-                BethelLists result = await _repo.GetBethelDetailsAsync(id);
+                vmBethelEdit result = await _repo.GetBethelDetailsAsync(id);
                 return Ok(result); //result
             }
             catch (Exception)
@@ -95,7 +95,7 @@ namespace api.bcs.affairs.Controllers
 
         [HttpPut]
         [Route("modifyBethel")]
-        public async Task<IActionResult> EditBethels([FromBody] Bethels model)
+        public async Task<IActionResult> EditBethels([FromBody] vmBethelEdit model)
         {
             try
             {

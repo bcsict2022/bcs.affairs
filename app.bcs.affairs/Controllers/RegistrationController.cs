@@ -1,5 +1,6 @@
 ﻿using app.bcs.affairs.APIServices;
 using app.bcs.affairs.Models;
+using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -51,48 +52,34 @@ namespace app.bcs.affairs.Controllers
                 return Content(ex.Message);
             }
         }
-        public async Task<IActionResult> GetBethelDetail(string id)
-        {
-            try
-            {
-                var url = "Bethels/BethelDetail";
-                var response = await _affairsService.GetAllByIdAsync<vmBethelLists[]>(url, id);
-
-                var resultJson = JsonConvert.SerializeObject(response);
-                return Content((string)resultJson, "application/json");
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
-        }
+        
 
         public IActionResult NewBethels()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Bethels(vmBethel vm)
+        public async Task<IActionResult> Bethels(vmBethel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
 
-                    var model = new vmBethel()
-                    {
-                        BethelTypeId = vm.BethelTypeId,
-                        BethelDescription = vm.BethelDescription,
-                        Address = vm.Address,
-                        Address2 = vm.Address2,
-                        CountryId = vm.CountryId,
-                        StatesProvince = vm.StatesProvince,
-                        LocalCouncil = vm.LocalCouncil,
-                        ZipPostCode = vm.ZipPostCode,
-                        BcsZone = vm.BcsZone,
-                        Town = vm.Town,
-                        UserId = HttpContext.Session.GetString("_userId")
-                    };
+                    //var model = new vmBethel()
+                    //{
+                    //    BethelTypeId = vm.BethelTypeId,
+                    //    BethelDescription = vm.BethelDescription,
+                    //    Address = vm.Address,
+                    //    Address2 = vm.Address2,
+                    //    CountryId = vm.CountryId,
+                    //    StatesProvince = vm.StatesProvince,
+                    //    LocalCouncil = vm.LocalCouncil,
+                    //    ZipPostCode = vm.ZipPostCode,
+                    //    BcsZone = vm.BcsZone,
+                    //    Town = vm.Town,
+                    //    UserId = HttpContext.Session.GetString("_userId")
+                    //};
                     var response = await _affairsService.CreateAsync("Bethels/addBethel", model);
                     if (response.IsSuccessStatusCode)
                     {
@@ -120,7 +107,7 @@ namespace app.bcs.affairs.Controllers
                     return Json(new { mstatus = ex.Message.ToString() });
                 }
             }
-            return View("Bethels", vm); ;
+            return View("Bethels", model); ;
         }
 
         public async Task<IActionResult> GetBethelStatesProvinces(DataSourceLoadOptions loadOptions)
@@ -129,8 +116,9 @@ namespace app.bcs.affairs.Controllers
             {
                 var url = "Bethels/getBethelStatesProvinces";
                 var response = await _affairsService.GetAllAsync<BethelDistinctLists[]>(url);
+                var result = DataSourceLoader.Load(response, loadOptions);
+                var resultJson = JsonConvert.SerializeObject(result);
 
-                var resultJson = JsonConvert.SerializeObject(response);
                 return Content((string)resultJson, "application/json");
             }
             catch (Exception ex)
@@ -145,7 +133,8 @@ namespace app.bcs.affairs.Controllers
                 var url = "Bethels/getBethelLocalCouncils";
                 var response = await _affairsService.GetAllAsync<BethelDistinctLists[]>(url);
 
-                var resultJson = JsonConvert.SerializeObject(response);
+                var result = DataSourceLoader.Load(response, loadOptions);
+                var resultJson = JsonConvert.SerializeObject(result);
                 return Content((string)resultJson, "application/json");
             }
             catch (Exception ex)
@@ -160,7 +149,8 @@ namespace app.bcs.affairs.Controllers
                 var url = "Bethels/getBethelTowns";
                 var response = await _affairsService.GetAllAsync<BethelDistinctLists[]>(url);
 
-                var resultJson = JsonConvert.SerializeObject(response);
+                var result = DataSourceLoader.Load(response, loadOptions);
+                var resultJson = JsonConvert.SerializeObject(result);
                 return Content((string)resultJson, "application/json");
             }
             catch (Exception ex)
@@ -168,39 +158,32 @@ namespace app.bcs.affairs.Controllers
                 return Content(ex.Message);
             }
         }
-        public IActionResult EditBethels()
-        {
-            return View();
-        }
-        public async Task<IActionResult> EditBethels(string key, string values)
+       
+        public async Task<IActionResult> EditBethels(string id)
         {
             try
             {
-                //if (string.IsNullOrEmpty(HttpContext.Session.GetString("_userId")))
-                //{
-                //    return RedirectToAction("Index", "Home");
-                //}
-                var rn = JsonConvert.DeserializeObject<vmBethelLists>(value: values);
-                var model = new vmBethelLists()
+                vmBethelEdit response = await _affairsService.GetAllByIdAsync<vmBethelEdit>("Bethels/getBethelDetails", id.ToString());
+                if (!(response == null))
                 {
-                    Id = key,
-                    BethelTypeId = rn.BethelTypeId,
-                    BethelDescription = rn.BethelDescription,
-                    Address = rn.Address,
-                    Address2 = rn.Address2,
-                    CountryId = rn.CountryId,
-                    StatesProvince = rn.StatesProvince,
-                    LocalCouncil = rn.LocalCouncil,
-                    ZipPostCode = rn.ZipPostCode,
-                    BcsZone = rn.BcsZone,
-                    Town = rn.Town,
-                    UserId = HttpContext.Session.GetString("_userId"),
-                    TransactionDate = DateTime.Today.Date
-                };
+                    return View(model: response);
+                }
+             
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ex = ex.Message;
+            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditBethel(vmBethelEdit model)
+        {
+            try
+            {
+                var response = await _affairsService.EditAsync<vmBethelEdit>("Bethels/modifyBethel", model);
 
-                var response = await _affairsService.EditAsync<BethelTypes>("Bethels/modifyBethel", model);
-
-                return Ok();
+                return RedirectToAction("Bethels");
             }
             catch (Exception ex)
             {
