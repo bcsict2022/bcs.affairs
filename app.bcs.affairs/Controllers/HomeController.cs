@@ -51,7 +51,7 @@ namespace app.bcs.affairs.Controllers
                     writer.WriteLine("};");
                 }
             }
-            return View();
+            return View("Index");
         }
        
         [HttpPost]
@@ -131,21 +131,19 @@ namespace app.bcs.affairs.Controllers
                                 var claims = new List<Claim> { new Claim(ClaimTypes.Name, HttpContext.Session.GetString("_userId")) };
                                 var userIdentity = new ClaimsIdentity(claims, "login");
                                 ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
-                                HttpContext.SignInAsync(principal);
+                                await  HttpContext.SignInAsync(principal);
 
                                 switch (userDepartment)
                                 {
                                     case "Registration":
-                                        Console.WriteLine("Case 1");
-                                        break;
+                                        return RedirectToAction("RegistrationDashBoards", "Home");
                                     case "Tresury":
                                         Console.WriteLine("Case 2");
                                         break;
                                     default:
-                                        return View("Index", model);
-                                        break;
+                                        return View("Index", model);                                       
                                 }
-                                return RedirectToAction("RegistrationDashBoards", "Home");
+                                
                             }
                             return View("Index", model);
                         }
@@ -182,20 +180,22 @@ namespace app.bcs.affairs.Controllers
                     var response = await _affairsService.CreateAsync("Users/addmodifyUserPasswords", model);
                     if (response.IsSuccessStatusCode)
                     {
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Index","Home");
                     }
                     else
                     {
                         ViewBag.loginError = "Invalid User Name and/or Password";
+                        return View(vm);
                     }
-
                 }
+                return View(vm);
+
             }
             catch (Exception ex)
             {
                 ViewBag.loginError = ex.Message.ToString();
-            }
-            return View(vm);
+                return View(vm);
+            }         
         }
 
         [Authorize]
@@ -207,7 +207,25 @@ namespace app.bcs.affairs.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
+        public IActionResult DashBoards()
+        {
+            var userDepartment = HttpContext.Session.GetString("_departmentId");
+            if (!string.IsNullOrEmpty(userDepartment))
+            {
+                
+                switch (userDepartment)
+                {
+                    case "Registration":
+                        return RedirectToAction("RegistrationDashBoards", "Home");                       
+                    case "Tresury":
+                        Console.WriteLine("Case 2");
+                        break;
+                    default:
+                        return RedirectToAction("Index", "Home");                      
+                }                
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
         [Authorize]
         public async Task<IActionResult> RegistrationDashBoards()

@@ -325,6 +325,7 @@ namespace infrastructure.bcs.affairs.Factories
 
                                 user.PasswordHashed = passwordHash;
                                 user.SecurityStamp = passwordSalt;
+                                await _basedContext.SaveChangesAsync();
                                 return true;
                             }
                             else
